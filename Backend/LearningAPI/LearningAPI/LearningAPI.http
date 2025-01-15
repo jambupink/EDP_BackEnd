@@ -1,5 +1,5 @@
 ﻿@LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJsYXRAZ21haWwuY29tIiwibmJmIjoxNzM2OTQ0MjcwLCJleHAiOjE3Mzk1MzYyNzAsImlhdCI6MTczNjk0NDI3MH0.qUEsPrP9SZi-aS_PiqVNaitFyfnFgt4QBKhiS6PcrwE
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJiZXRsc3QiLCJlbWFpbCI6ImJlbHRAZ21haWwuY29tIiwibmJmIjoxNzM2OTQ1OTQ0LCJleHAiOjE3Mzk1Mzc5NDQsImlhdCI6MTczNjk0NTk0NH0.H40TlvDSVbN5MAR0iR6s7CQ38qN_S3nZ_t_utLiqw1E
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -93,6 +93,15 @@ POST {{LearningAPI_HostAddress}}/user/login
 Content-Type: application/json
 
 {
+  "email": "belt@gmail.com",
+  "password": "test1234"
+}
+
+###
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
   "email": "lat@gmail.com",
   "password": "test1234"
 }
@@ -107,7 +116,7 @@ GET {{LearningAPI_HostAddress}}/user?search=bel
 
 ###
 
-@id=1
+@id=2
 GET {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
 
@@ -138,5 +147,11 @@ Authorization: Bearer {{token}}
 ###
 
 GET {{LearningAPI_HostAddress}}/user/auth
+Authorization: Bearer {{token}}
+# need to fix the bug where after changing name, it doesnt show updated name in the auth
+# might be important
+###
+
+DELETE {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
 ###

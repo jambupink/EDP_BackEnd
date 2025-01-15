@@ -265,5 +265,33 @@ namespace LearningAPI.Controllers
                 .Where(c => c.Type == ClaimTypes.NameIdentifier)
                 .Select(c => c.Value).SingleOrDefault());
         }
+
+        [HttpDelete("{id}"), Authorize]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            try
+            {
+                var myUser = context.Users.Find(id);
+                if (myUser == null)
+                {
+                    return NotFound();
+                }
+
+                int userId = GetUserId();
+                if (myUser.Id != userId)
+                {
+                    return Forbid();
+                }
+
+                context.Users.Remove(myUser);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error when deleting User");
+                return StatusCode(500);
+            }
+        }
     }
 }
