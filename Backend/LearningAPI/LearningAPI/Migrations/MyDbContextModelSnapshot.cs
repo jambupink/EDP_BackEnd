@@ -19,7 +19,7 @@ namespace LearningAPI.Migrations
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("LearningAPI.Models.Tutorial", b =>
+            modelBuilder.Entity("LearningAPI.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tutorials");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.User", b =>
@@ -87,10 +87,10 @@ namespace LearningAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("LearningAPI.Models.Tutorial", b =>
+            modelBuilder.Entity("LearningAPI.Models.Product", b =>
                 {
                     b.HasOne("LearningAPI.Models.User", "User")
-                        .WithMany("Tutorials")
+                        .WithMany("Products")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -100,7 +100,7 @@ namespace LearningAPI.Migrations
 
             modelBuilder.Entity("LearningAPI.Models.User", b =>
                 {
-                    b.Navigation("Tutorials");
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

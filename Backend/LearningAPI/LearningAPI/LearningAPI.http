@@ -6,11 +6,11 @@ Accept: application/json
 
 ###
 
-GET {{LearningAPI_HostAddress}}/tutorial?search=hello
+GET {{LearningAPI_HostAddress}}/product?search=hello
 
 ###
 
-GET {{LearningAPI_HostAddress}}/tutorial/1
+GET {{LearningAPI_HostAddress}}/product/1
 
 ###
 
@@ -39,7 +39,7 @@ GET {{LearningAPI_HostAddress}}/user/auth
 Authorization: Bearer {{token}}
 
 ###
-POST {{LearningAPI_HostAddress}}/tutorial
+POST {{LearningAPI_HostAddress}}/product
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -50,7 +50,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-PUT {{LearningAPI_HostAddress}}/tutorial/2
+PUT {{LearningAPI_HostAddress}}/product/2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -61,7 +61,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-DELETE {{LearningAPI_HostAddress}}/tutorial/2
+DELETE {{LearningAPI_HostAddress}}/product/2
 Authorization: Bearer {{token}}
 
 ###
