@@ -11,5 +11,6 @@
         public string MobileNumber { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public int Points { get; set; } = 0;
+        public int UserRoleId { get; set; }
     }
 }

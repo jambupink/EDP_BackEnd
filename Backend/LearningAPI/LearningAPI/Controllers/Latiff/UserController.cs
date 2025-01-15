@@ -34,6 +34,11 @@ namespace LearningAPI.Controllers.Latiff
                 }
 
                 // Create user object
+                var defaultRole = context.UserRoles.FirstOrDefault(ur => ur.Id == 1);
+                if (defaultRole == null)
+                {
+                    return BadRequest(new { message = "Default user role does not exist." });
+                }
                 var now = DateTime.Now;
                 string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
                 var user = new User()
@@ -41,6 +46,7 @@ namespace LearningAPI.Controllers.Latiff
                     Name = request.Name,
                     Email = request.Email,
                     Password = passwordHash,
+                    UserRoleId = 1,
                     CreatedAt = now,
                     UpdatedAt = now
                 };
@@ -56,6 +62,7 @@ namespace LearningAPI.Controllers.Latiff
                 return StatusCode(500);
             }
         }
+
 
         [HttpPost("login")]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
@@ -105,16 +112,18 @@ namespace LearningAPI.Controllers.Latiff
                     .Select(c => c.Value).SingleOrDefault();
                 var email = User.Claims.Where(c => c.Type == ClaimTypes.Email)
                     .Select(c => c.Value).SingleOrDefault();
+                var userRoleId = Convert.ToInt32(User.Claims.Where(c => c.Type == ClaimTypes.Role)
+                    .Select(c => c.Value).SingleOrDefault()); 
 
-                if (id != 0 && name != null && email != null)
+                if (id != 0 && name != null && email != null && userRoleId != 0)
                 {
-                    UserDTO userDTO = new() { Id = id, Name = name, Email = email };
+                    UserDTO userDTO = new() { Id = id, Name = name, Email = email, UserRoleId = userRoleId };
                     AuthResponse response = new() { User = userDTO };
                     return Ok(response);
                 }
                 else
                 {
-                    return Unauthorized("test");
+                    return Unauthorized(userRoleId);
                 }
             }
             catch (Exception ex)
@@ -143,7 +152,8 @@ namespace LearningAPI.Controllers.Latiff
                 [
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(ClaimTypes.Email, user.Email)
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.UserRoleId.ToString())
                 ]),
                 Expires = DateTime.UtcNow.AddDays(tokenExpiresDays),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

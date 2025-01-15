@@ -1,5 +1,5 @@
 ﻿@LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJiZXRsc3QiLCJlbWFpbCI6ImJlbHRAZ21haWwuY29tIiwibmJmIjoxNzM2OTQ1OTQ0LCJleHAiOjE3Mzk1Mzc5NDQsImlhdCI6MTczNjk0NTk0NH0.H40TlvDSVbN5MAR0iR6s7CQ38qN_S3nZ_t_utLiqw1E
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI2IiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJsYXRAZ21haWwuY29tIiwicm9sZSI6IjEiLCJuYmYiOjE3MzY5NjczNzEsImV4cCI6MTczOTU1OTM3MSwiaWF0IjoxNzM2OTY3MzcxfQ.hFDd2-WznVU5nNrMYW-BECi3wYWkvLpUg84PQ5vXU5Y
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -116,7 +116,7 @@ GET {{LearningAPI_HostAddress}}/user?search=bel
 
 ###
 
-@id=2
+@id=6
 GET {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
 
@@ -152,7 +152,7 @@ Authorization: Bearer {{token}}
 # might be important
 ###
 
-DELETE {{LearningAPI_HostAddress}}/user/{{id}}
+DELETE {{LearningAPI_HostAddress}}/user/5
 Authorization: Bearer {{token}}
 ###
 
@@ -180,11 +180,11 @@ Content-Type: application/json
 
 {
   "role": "customer",
-  "description": "testestetst"
+  "description": "heheheas"
 }
 
 ###
 
-DELETE {{LearningAPI_HostAddress}}/userrole/4
+DELETE {{LearningAPI_HostAddress}}/userrole/3
 
 ###
