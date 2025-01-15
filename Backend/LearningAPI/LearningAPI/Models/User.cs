@@ -7,7 +7,9 @@ namespace LearningAPI.Models
 {
     public class User
     {
-        public int Id { get; set; }
+		internal int UserId;
+
+		public int Id { get; set; }
 
         [MaxLength(50)]
         public string Name { get; set; } = string.Empty;
@@ -27,5 +29,6 @@ namespace LearningAPI.Models
         // Navigation property to represent the one-to-many relationship
         [JsonIgnore]
         public List<Tutorial>? Tutorials { get; set; }
-    }
+
+	}
 }

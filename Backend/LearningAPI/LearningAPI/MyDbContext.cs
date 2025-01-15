@@ -14,8 +14,14 @@ namespace LearningAPI
             }
         }
 
+
         public required DbSet<Tutorial> Tutorials { get; set; }
 
         public required DbSet<User> Users { get; set; }
-    }
+
+		public DbSet<Cart> Carts { get; set; }
+		public DbSet<Order> Orders { get; set; }
+		public DbSet<OrderItem> OrderItems { get; set; }
+		public DbSet<Payment> Payments { get; set; }
+	}
 }
