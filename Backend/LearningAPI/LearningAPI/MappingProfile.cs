@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LearningAPI.Models;
+using LearningAPI.Models.Latiff;
 
 namespace LearningAPI
 {

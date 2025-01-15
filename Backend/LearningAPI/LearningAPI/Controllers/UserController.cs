@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using LearningAPI.Models;
+using LearningAPI.Models.Latiff;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -114,7 +114,7 @@ namespace LearningAPI.Controllers
                 }
                 else
                 {
-                    return Unauthorized();
+                    return Unauthorized("test");
                 }
             }
             catch (Exception ex)
@@ -152,6 +152,118 @@ namespace LearningAPI.Controllers
             string token = tokenHandler.WriteToken(securityToken);
 
             return token;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<UserDTO>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(string? search)
+        {
+            try
+            {
+                IQueryable<User> query = context.Users;
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(u => u.Name.Contains(search) || u.Email.Contains(search));
+                }
+
+                //retrieve all users
+                var users = await query.ToListAsync();
+                var userDTOs = users.Select(mapper.Map<UserDTO>);
+
+                return Ok(userDTOs);
+            }
+            catch (Exception ex) 
+            {
+                logger.LogError(ex, "Error when fetching all users");
+
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("{id}"), Authorize]
+        [ProducesResponseType(typeof(UserDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            try
+            {
+                var user = await context.Users.SingleOrDefaultAsync(u => u.Id == id);
+
+                if (user == null)
+                {
+                    return NotFound(new { message = "User not found." });
+                }
+
+                var UserDTO = mapper.Map<UserDTO>(user);
+
+                return Ok(UserDTO);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error when fetching user by ID");
+
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut("{id}"), Authorize]
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserRequest user)
+        {
+            try
+            {
+                var myUser = await context.Users.FindAsync(id);
+                if (myUser == null)
+                {
+                    return NotFound();
+                }
+
+                int userId = GetUserId();
+                if (myUser.Id != userId)
+                {
+                    return Forbid();
+                }
+
+                if (user.Name != null)
+                {
+                    myUser.Name = user.Name.Trim();
+                }
+                if (user.Email != null)
+                {
+                    myUser.Email = user.Email.Trim();
+                }
+                if (user.Password != null)
+                {
+                    myUser.Password = user.Password.Trim();
+                }
+                if (user.Gender != null)
+                {
+                    myUser.Gender = user.Gender.Trim();
+                }
+                if (user.MobileNumber != null)
+                {
+                    myUser.MobileNumber = user.MobileNumber.Trim();
+                }
+                if (user.Address != null)
+                {
+                    myUser.Address = user.Address.Trim();
+                }
+                myUser.UpdatedAt = DateTime.Now;
+
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error when updating user");
+                return StatusCode(500);
+            }
+        }
+        private int GetUserId()
+        {
+            return Convert.ToInt32(User.Claims
+                .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).SingleOrDefault());
         }
     }
 }

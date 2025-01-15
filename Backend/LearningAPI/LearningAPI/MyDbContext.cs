@@ -1,4 +1,5 @@
 ﻿using LearningAPI.Models;
+using LearningAPI.Models.Latiff;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearningAPI
