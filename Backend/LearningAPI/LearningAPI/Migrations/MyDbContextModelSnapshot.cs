@@ -64,7 +64,12 @@ namespace LearningAPI.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime");
 
+                    b.Property<int>("UserRoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserRoleId");
 
                     b.ToTable("Users");
                 });
@@ -132,6 +137,17 @@ namespace LearningAPI.Migrations
                     b.ToTable("Tutorials");
                 });
 
+            modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
+                {
+                    b.HasOne("LearningAPI.Models.Latiff.UserRole", "UserRole")
+                        .WithMany("Users")
+                        .HasForeignKey("UserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRole");
+                });
+
             modelBuilder.Entity("LearningAPI.Models.Tutorial", b =>
                 {
                     b.HasOne("LearningAPI.Models.Latiff.User", "User")
@@ -146,6 +162,11 @@ namespace LearningAPI.Migrations
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
                 {
                     b.Navigation("Tutorials");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Latiff.UserRole", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

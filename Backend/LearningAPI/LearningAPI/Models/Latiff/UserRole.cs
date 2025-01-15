@@ -15,5 +15,6 @@ namespace LearningAPI.Models.Latiff
 
         [Column(TypeName = "datetime")]
         public DateTime UpdatedAt { get; set; }
+        public List<User>? Users { get; set; }
     }
 }

@@ -34,5 +34,8 @@ namespace LearningAPI.Models.Latiff
         // Navigation property to represent the one-to-many relationship
         [JsonIgnore]
         public List<Tutorial>? Tutorials { get; set; }
+
+        public int UserRoleId { get; set; }
+        public UserRole? UserRole { get; set; }
     }
 }
