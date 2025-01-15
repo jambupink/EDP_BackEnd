@@ -80,7 +80,7 @@ namespace LearningAPI.Controllers
 
 				Product? newProduct = context.Products.Include(t => t.User)
                     .FirstOrDefault(t => t.Id == myProduct.Id);
-				ProductlDTO productDTO = mapper.Map<ProductDTO>(newProduct);
+				ProductDTO productDTO = mapper.Map<ProductDTO>(newProduct);
                 return Ok(productDTO);
             }
             catch (Exception ex)
@@ -91,7 +91,7 @@ namespace LearningAPI.Controllers
         }
 
         [HttpPut("{id}"), Authorize]
-        public async Task<IActionResult> UpdateProduct(int id, UpdateProductlRequest product)
+        public async Task<IActionResult> UpdateProduct(int id, UpdateProductRequest product)
         {
             try
             {
