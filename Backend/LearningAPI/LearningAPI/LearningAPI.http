@@ -65,7 +65,7 @@ DELETE {{LearningAPI_HostAddress}}/tutorial/2
 Authorization: Bearer {{token}}
 
 ###
-
+# --------------------- user --------------------------------------------------
 
 POST {{LearningAPI_HostAddress}}/user/register
 Content-Type: application/json
@@ -154,4 +154,37 @@ Authorization: Bearer {{token}}
 
 DELETE {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
+###
+
+# ----------------------------     user role    ------------------------------------------
+POST {{LearningAPI_HostAddress}}/userrole
+Content-Type: application/json
+
+{
+  "role": "customer",
+  "description": "testestetst"
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/userrole
+
+###
+
+GET {{LearningAPI_HostAddress}}/userrole/2
+
+###
+
+PUT {{LearningAPI_HostAddress}}/userrole/1
+Content-Type: application/json
+
+{
+  "role": "customer",
+  "description": "testestetst"
+}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/userrole/4
+
 ###
