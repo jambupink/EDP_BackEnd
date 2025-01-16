@@ -113,6 +113,10 @@ namespace LearningAPI.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("CardNo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasColumnType("longtext");

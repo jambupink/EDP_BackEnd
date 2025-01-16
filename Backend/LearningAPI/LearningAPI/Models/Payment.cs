@@ -11,6 +11,7 @@ namespace LearningAPI.Models
 		public string PaymentMethod { get; set; }
 		public string CustomerName { get; set; }
 		public string Cvc { get; set; }
+		public string CardNo { get; set; }
 		public decimal Amount { get; set; }
 		public DateTime PaymentDate { get; set; }
 		public string Status { get; set; } = "Pending";

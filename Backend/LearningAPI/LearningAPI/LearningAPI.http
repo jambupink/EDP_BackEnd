@@ -73,18 +73,11 @@ Content-Type: application/json
 
 [
   {
-    "productId": 43,
+    "productId": 16,
     "quantity": 2,
     "price": 3,
     "productname": "yeap",
     "size": "S"
-  },
-  {
-    "productId": 23,
-    "quantity": 1,
-    "price": 5,
-    "productname": "idk ",
-    "size": "M"
   }
 ]
 
@@ -148,10 +141,11 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-   "PaymentMethod": "CreditCard",
+   "PaymentMethod": "Credit Card",
   "CustomerName": "John Doe",
   "Cvc": "123",
-  "Amount": 50.00
+  "Amount": 50.00,
+  "CardNo": "4686676683763423"
 }
 
 ###
