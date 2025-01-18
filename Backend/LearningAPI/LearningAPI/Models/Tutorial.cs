@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using LearningAPI.Models.Latiff;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace LearningAPI.Models

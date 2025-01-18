@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LearningAPI.Models;
+using LearningAPI.Models.Latiff;
 
 namespace LearningAPI
 {
@@ -10,6 +11,7 @@ namespace LearningAPI
             CreateMap<Tutorial, TutorialDTO>();
             CreateMap<User, UserDTO>();
             CreateMap<User, UserBasicDTO>();
+            CreateMap<UserRole, UserRoleDTO>();
         }
     }
 }
