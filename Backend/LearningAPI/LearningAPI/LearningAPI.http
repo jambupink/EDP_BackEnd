@@ -1,6 +1,5 @@
 ﻿@LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJMaSBIYWl5dW4iLCJlbWFpbCI6ImxpX2hhaXl1bkBueXAuZWR1LnNnIiwibmJmIjoxNzMxNTg0MDQ1LCJleHAiOjE3MzQxNzYwNDUsImlhdCI6MTczMTU4NDA0NX0.-7oqL5bSYY3A9odsRTYfTeN1Iuk8aGzTYxb1Ib5oAug
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJMaSBIYWl5dW4iLCJlbWFpbCI6ImxpX2hhaXl1bkBueXAuZWR1LnNnIiwibmJmIjoxNzM3NTYwMjkzLCJleHAiOjE3NDAxNTIyOTMsImlhdCI6MTczNzU2MDI5M30.KP9uLJWlD8M-pSSLdWW5Twvy8ssso7ckx9BiW53jbbY
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
@@ -66,3 +65,39 @@ Authorization: Bearer {{token}}
 
 ###
 
+
+POST {{LearningAPI_HostAddress}}/donate
+Content-Type: application/json
+
+{
+  //DonationRequest
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/donation/latest
+Authorization: Bearer {{token}}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/file/string
+
+###
+
+POST {{LearningAPI_HostAddress}}/file/upload
+Content-Type: application/json
+
+{
+  //IFormFile
+}
+
+###
+
+PUT {{LearningAPI_HostAddress}}/donation/0/datetime
+Content-Type: application/json
+
+{
+  //UpdateDateTimeRequest
+}
+
+###
