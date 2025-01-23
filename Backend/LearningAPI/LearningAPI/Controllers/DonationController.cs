@@ -126,6 +126,38 @@ namespace LearningAPI.Controllers
 			}
 		}
 
+		[HttpGet("user-donations"), Authorize]
+		[ProducesResponseType(typeof(List<DonationDTO>), StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public async Task<IActionResult> GetUserDonations()
+		{
+			try
+			{
+				int userId = GetUserId();
+
+				// Retrieve all donations for the authenticated user
+				var userDonations = await context.Donations
+					.Where(d => d.UserId == userId)
+					.OrderByDescending(d => d.CreatedAt) // Optional: Order by latest donations
+					.ToListAsync();
+
+				if (userDonations == null || !userDonations.Any())
+				{
+					return NotFound(new { message = "No donations found." });
+				}
+
+				// Map to DTOs for response
+				var donationDTOs = mapper.Map<List<DonationDTO>>(userDonations);
+
+				return Ok(donationDTOs);
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Error fetching user donations");
+				return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+			}
+		}
+
 		private int GetUserId()
 		{
 			return Convert.ToInt32(User.Claims
