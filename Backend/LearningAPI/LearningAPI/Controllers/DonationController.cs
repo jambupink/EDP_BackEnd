@@ -158,6 +158,54 @@ namespace LearningAPI.Controllers
 			}
 		}
 
+
+		[HttpDelete("{id}/image"), Authorize]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public async Task<IActionResult> DeleteDonationImage(int id)
+		{
+			try
+			{
+				var donation = await context.Donations.FirstOrDefaultAsync(d => d.Id == id);
+
+				if (donation == null)
+				{
+					return NotFound(new { message = "Donation not found." });
+				}
+
+				if (donation.UserId != GetUserId())
+				{
+					return Unauthorized(new { message = "You are not authorized to delete this image." });
+				}
+
+				if (string.IsNullOrEmpty(donation.ImageFile))
+				{
+					return BadRequest(new { message = "No image to delete." });
+				}
+
+				// Delete the image file from the server or storage
+				var imagePath = Path.Combine("wwwroot", "uploads", donation.ImageFile);
+				if (System.IO.File.Exists(imagePath))
+				{
+					System.IO.File.Delete(imagePath);
+				}
+
+				// Remove the image reference from the database
+				donation.ImageFile = null;
+				donation.UpdatedAt = DateTime.UtcNow;
+
+				await context.SaveChangesAsync();
+
+				return Ok(new { message = "Image deleted successfully." });
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Error deleting donation image");
+				return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+			}
+		}
+
+
 		private int GetUserId()
 		{
 			return Convert.ToInt32(User.Claims

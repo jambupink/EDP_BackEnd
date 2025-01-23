@@ -101,3 +101,7 @@ Content-Type: application/json
 }
 
 ###
+
+GET {{LearningAPI_HostAddress}}/donation/user-donations
+
+###
