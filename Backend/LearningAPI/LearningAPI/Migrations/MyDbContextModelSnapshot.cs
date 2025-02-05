@@ -101,7 +101,7 @@ namespace LearningAPI.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("LearningAPI.Models.Tutorial", b =>
+            modelBuilder.Entity("LearningAPI.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,14 +112,17 @@ namespace LearningAPI.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("ImageFile")
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<string>("Title")
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
@@ -134,7 +137,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tutorials");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
@@ -148,10 +151,10 @@ namespace LearningAPI.Migrations
                     b.Navigation("UserRole");
                 });
 
-            modelBuilder.Entity("LearningAPI.Models.Tutorial", b =>
+            modelBuilder.Entity("LearningAPI.Models.Product", b =>
                 {
                     b.HasOne("LearningAPI.Models.Latiff.User", "User")
-                        .WithMany("Tutorials")
+                        .WithMany("Products")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -161,7 +164,7 @@ namespace LearningAPI.Migrations
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
                 {
-                    b.Navigation("Tutorials");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.UserRole", b =>

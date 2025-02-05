@@ -6,14 +6,6 @@ Accept: application/json
 
 ###
 
-GET {{LearningAPI_HostAddress}}/tutorial?search=hello
-
-###
-
-GET {{LearningAPI_HostAddress}}/tutorial/1
-
-###
-
 POST {{LearningAPI_HostAddress}}/user/register
 Content-Type: application/json
 
@@ -36,32 +28,6 @@ Content-Type: application/json
 ###
 
 GET {{LearningAPI_HostAddress}}/user/auth
-Authorization: Bearer {{token}}
-
-###
-POST {{LearningAPI_HostAddress}}/tutorial
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
- "title": "Web API",
- "description": "Happy coding :)"
-}
-
-###
-
-PUT {{LearningAPI_HostAddress}}/tutorial/1
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
- "title": "My Story",
- "description": "Your Song ❤"
-}
-
-###
-
-DELETE {{LearningAPI_HostAddress}}/tutorial/2
 Authorization: Bearer {{token}}
 
 ###
@@ -186,5 +152,52 @@ Content-Type: application/json
 ###
 
 DELETE {{LearningAPI_HostAddress}}/userrole/3
+
+###
+# ----------------------------     product    ------------------------------------------
+GET {{LearningAPI_HostAddress}}/product/product/13
+
+###
+
+# POST {{LearningAPI_HostAddress}}/product
+# Content-Type: application/json
+# Authorization: Bearer {{token}}
+
+# {
+#   "productName": "New Test Product",
+#   "description": "Test Description",
+#   "isArchived": false,
+#   "imageFiles": "shirt.png"
+# }
+
+###
+
+PUT {{LearningAPI_HostAddress}}/product/1
+Content-Type: application/json
+
+{
+  "productName": "Updated Test Product",
+  "description": "Updated Test Description",
+  "isArchived": false,
+  "imageFiles": "shirt.png"
+}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/product/1
+
+###
+
+
+POST {{LearningAPI_HostAddress}}/product
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productName": "New Test Product",
+  "description": "Test Description",
+  "isArchived": false,
+  "imageFiles": "shirt.png"
+}
 
 ###
