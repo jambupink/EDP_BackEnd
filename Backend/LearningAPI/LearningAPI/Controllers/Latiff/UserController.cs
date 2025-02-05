@@ -241,6 +241,13 @@ namespace LearningAPI.Controllers.Latiff
                     return NotFound(new { message = "User not found." });
                 }
 
+                var (userId, userRoleId) = GetUserInfo();
+
+                // ✅ Allow user to view their own profile OR admins to view any profile
+                if (user.Id != userId && userRoleId != 2)
+                {
+                    return Forbid();
+                }
                 var UserDTO = mapper.Map<UserDTO>(user);
 
                 return Ok(UserDTO);
@@ -265,13 +272,14 @@ namespace LearningAPI.Controllers.Latiff
                     return NotFound();
                 }
 
-                int userId = GetUserId();
-                if (myUser.Id != userId)
+                var (userId, userRoleId) = GetUserInfo();
+
+                if (myUser.Id != userId && userRoleId != 2)
                 {
                     return Forbid();
                 }
-                
-                if(user.Password != null)
+
+                if (user.Password != null)
                 {
                     string message = "Email or password is not correct.";
                     bool verified = BCrypt.Net.BCrypt.Verify(user.Password, myUser.Password);
@@ -311,8 +319,9 @@ namespace LearningAPI.Controllers.Latiff
                     return NotFound();
                 }
 
-                int userId = GetUserId();
-                if (myUser.Id != userId)
+                var (userId, userRoleId) = GetUserInfo();
+
+                if (myUser.Id != userId && userRoleId != 2)
                 {
                     return Forbid();
                 }
@@ -365,11 +374,19 @@ namespace LearningAPI.Controllers.Latiff
                 return StatusCode(500);
             }
         }
-        private int GetUserId()
+        private (int userId, int userRoleId) GetUserInfo()
         {
-            return Convert.ToInt32(User.Claims
+            int userId = Convert.ToInt32(User.Claims
                 .Where(c => c.Type == ClaimTypes.NameIdentifier)
-                .Select(c => c.Value).SingleOrDefault());
+                .Select(c => c.Value)
+                .SingleOrDefault());
+
+            int userRoleId = Convert.ToInt32(User.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .SingleOrDefault());
+
+            return (userId, userRoleId);
         }
 
         [HttpDelete("{id}"), Authorize]
@@ -383,8 +400,9 @@ namespace LearningAPI.Controllers.Latiff
                     return NotFound();
                 }
 
-                int userId = GetUserId();
-                if (myUser.Id != userId)
+                var (userId, userRoleId) = GetUserInfo();
+
+                if (myUser.Id != userId && userRoleId != 2)
                 {
                     return Forbid();
                 }
