@@ -21,7 +21,7 @@ namespace LearningAPI.Controllers
 
 		// POST: Create Order
 		[HttpPost, Authorize]
-		public async Task<ActionResult<Order>> CreateOrder()
+		public async Task<ActionResult<Order>> CreateOrder([FromBody] CreateOrderRequest createOrderRequest)
 		{
 			// Get the current user ID
 			int userId = GetUserId();
@@ -46,6 +46,7 @@ namespace LearningAPI.Controllers
 				UserId = userId,
 				OrderDate = DateTime.UtcNow,
 				OrderStatus = "Pending",
+				DeliveryDate = createOrderRequest.DeliveryDate,
 				OrderItems = cartItems.Select(c => new OrderItem
 				{
 					ProductId = c.ProductId,
@@ -53,7 +54,6 @@ namespace LearningAPI.Controllers
 					Size = c.Size,
 					Quantity = c.Quantity,
 					Price = c.Price
-				
 				}).ToList()
 			};
 
