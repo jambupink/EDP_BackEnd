@@ -1,5 +1,5 @@
 ﻿@LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJsYXRpZmYiLCJlbWFpbCI6ImxhdGlmZjA2MDFAZ21haWwuY29tIiwicm9sZSI6IjEiLCJuYmYiOjE3Mzg3NDgyMjIsImV4cCI6MTc0MTM0MDIyMiwiaWF0IjoxNzM4NzQ4MjIyfQ.4XpcTuOrLS5PvahvE5dQNdsthzoqjeLt6mqwDfH9A48
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJwbGF0aWZmIiwiZW1haWwiOiJwbGF0aWZmMTc0QGdtYWlsLmNvbSIsInJvbGUiOiIxIiwibmJmIjoxNzM4Nzg1NTMyLCJleHAiOjE3NDEzNzc1MzIsImlhdCI6MTczODc4NTUzMn0.-JTQd-RFJmN4EM3RlmIIGdlppWtXcsyZSM5zGJt91aA
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -71,19 +71,8 @@ POST {{LearningAPI_HostAddress}}/user/register
 Content-Type: application/json
 
 {
-  "name": "latt",
-  "email": "lat@gmail.com",
-  "password": "test1234"
-}
-
-###
-
-POST {{LearningAPI_HostAddress}}/user/register
-Content-Type: application/json
-
-{
-  "name": "betlst",
-  "email": "belt@gmail.com",
+  "name": "latiff",
+  "email": "latiff0601@gmail.com",
   "password": "test1234"
 }
 
@@ -93,7 +82,7 @@ Content-Type: application/json
 
 {
   "name": "latiff",
-  "email": "latiff0601@gmail.com",
+  "email": "platiff174@gmail.com",
   "password": "test1234"
 }
 
@@ -109,6 +98,15 @@ Content-Type: application/json
 {
   "email": "latiff0601@gmail.com",
   "password": "test2345"
+}
+
+###
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+  "email": "platiff174@gmail.com",
+  "password": "test1234"
 }
 
 ###
@@ -139,7 +137,7 @@ GET {{LearningAPI_HostAddress}}/user?search=bel
 
 ###
 
-@id=1
+@id=2
 GET {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
 
@@ -168,7 +166,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 {
     "name": "lattt",
-    "userRoleId": "2t"
+    "userRoleId": "2"
     
     
 }
@@ -181,7 +179,7 @@ Authorization: Bearer {{token}}
 # might be important
 ###
 
-DELETE {{LearningAPI_HostAddress}}/user/5
+DELETE {{LearningAPI_HostAddress}}/user/2
 Authorization: Bearer {{token}}
 ### implement
 
