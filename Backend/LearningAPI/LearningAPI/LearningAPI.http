@@ -73,8 +73,15 @@ Content-Type: application/json
 
 [
   {
-    "productId": 16,
-    "quantity": 2,
+    "productId": 53,
+    "quantity": 1,
+    "price": 3,
+    "productname": "yeap",
+    "size": "S"
+  },
+  {
+    "productId": 63,
+    "quantity": 1,
     "price": 3,
     "productname": "yeap",
     "size": "S"
