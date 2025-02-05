@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Backend",
-    "\\Backend\\LearningAPI"
+    ""
   ],
-  "SelectedNode": "\\Backend\\LearningAPI\\LearningAPI.sln",
+  "SelectedNode": "\\LearningAPI.sln",
   "PreviewInSolutionExplorer": false
 }
