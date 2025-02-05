@@ -93,6 +93,39 @@ namespace LearningAPI.Controllers
 			}
 		}
 
+		//	[HttpPut("{id}/datetime"), Authorize]
+		//	[ProducesResponseType(StatusCodes.Status200OK)]
+		//	[ProducesResponseType(StatusCodes.Status404NotFound)]
+		//	public async Task<IActionResult> UpdateDonationDateTime(int id, [FromBody] UpdateDateTimeRequest request)
+		//	{
+		//		try
+		//		{
+		//			var donation = await context.Donations.FirstOrDefaultAsync(d => d.Id == id);
+		//
+		//			if (donation == null)
+		//			{
+		//				return NotFound(new { message = "Donation not found." });
+		//			}
+		//
+		//			if (donation.UserId != GetUserId())
+		//			{
+		//				return Unauthorized(new { message = "You are not authorized to update this donation." });
+		//			}
+		//
+		//			donation.DonationDateTime = DateTime.ParseExact(request.DonationDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+		//			donation.UpdatedAt = DateTime.UtcNow;
+
+		//			await context.SaveChangesAsync();
+
+		//			return Ok(new { message = "Date & Time updated successfully." });
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			logger.LogError(ex, "Error updating donation date & time");
+		//			return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+		//		}
+		//	}
+
 		[HttpPut("{id}/datetime"), Authorize]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -112,9 +145,26 @@ namespace LearningAPI.Controllers
 					return Unauthorized(new { message = "You are not authorized to update this donation." });
 				}
 
-				donation.DonationDateTime = DateTime.ParseExact(request.DonationDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+				// Convert new date
+				DateTime newDateTime = DateTime.ParseExact(request.DonationDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+				string changeLog = $"Pickup Date changed from {donation.DonationDateTime} to {newDateTime}";
+
+				// Update donation
+				donation.DonationDateTime = newDateTime;
 				donation.UpdatedAt = DateTime.UtcNow;
 
+				// Save changes
+				await context.SaveChangesAsync();
+
+				// Log the change in DonationHistory
+				var historyRecord = new DonationHistory
+				{
+					DonationId = id,
+					ChangeDescription = changeLog,
+					ChangeDate = DateTime.UtcNow
+				};
+
+				await context.DonationHistories.AddAsync(historyRecord);
 				await context.SaveChangesAsync();
 
 				return Ok(new { message = "Date & Time updated successfully." });
@@ -125,6 +175,7 @@ namespace LearningAPI.Controllers
 				return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
 			}
 		}
+
 
 		[HttpGet("user-donations"), Authorize]
 		[ProducesResponseType(typeof(List<DonationDTO>), StatusCodes.Status200OK)]
@@ -206,6 +257,43 @@ namespace LearningAPI.Controllers
 		}
 
 
+		[HttpGet("{donationId}/history"), Authorize]
+		[ProducesResponseType(typeof(List<DonationHistory>), StatusCodes.Status200OK)]
+		public async Task<IActionResult> GetDonationHistory(int donationId)
+		{
+			try
+			{
+				int userId = GetUserId();
+
+				// Check if the donation belongs to the user
+				var donation = await context.Donations
+					.Where(d => d.Id == donationId && d.UserId == userId)
+					.FirstOrDefaultAsync();
+
+				if (donation == null)
+				{
+					return NotFound(new { message = "Donation not found or not authorized." });
+				}
+
+				// Get the history
+				var history = await context.DonationHistories
+					.Where(dh => dh.DonationId == donationId)
+					.OrderByDescending(dh => dh.ChangeDate)
+					.ToListAsync();
+
+				if (history.Count == 0)
+					return NotFound(new { message = "No history found for this donation." });
+
+				return Ok(history);
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Error fetching donation history");
+				return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+			}
+		}
+
+
 		private int GetUserId()
 		{
 			return Convert.ToInt32(User.Claims
@@ -214,3 +302,5 @@ namespace LearningAPI.Controllers
 		}
 	}
 }
+
+

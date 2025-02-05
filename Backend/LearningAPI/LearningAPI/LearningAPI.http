@@ -105,3 +105,11 @@ Content-Type: application/json
 GET {{LearningAPI_HostAddress}}/donation/user-donations
 
 ###
+
+DELETE {{LearningAPI_HostAddress}}/donation/0/image
+
+###
+
+GET {{LearningAPI_HostAddress}}/donation/0/history
+
+###
