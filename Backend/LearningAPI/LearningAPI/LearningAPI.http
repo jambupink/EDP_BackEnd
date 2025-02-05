@@ -1,5 +1,5 @@
 ﻿@LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI2IiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJsYXRAZ21haWwuY29tIiwicm9sZSI6IjEiLCJuYmYiOjE3MzY5NjczNzEsImV4cCI6MTczOTU1OTM3MSwiaWF0IjoxNzM2OTY3MzcxfQ.hFDd2-WznVU5nNrMYW-BECi3wYWkvLpUg84PQ5vXU5Y
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI2IiwidW5pcXVlX25hbWUiOiJsYXR0dCIsImVtYWlsIjoibGF0QGdtYWlsLmNvbSIsInJvbGUiOiIxIiwibmJmIjoxNzM3NTMxNzIzLCJleHAiOjE3NDAxMjM3MjMsImlhdCI6MTczNzUzMTcyM30.xxRMLPfBNpdTnUCqVL6s24wTLA7LJU8uSdY3ZLuMy7o
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -131,7 +131,10 @@ Authorization: Bearer {{token}}
     "password": "",
     "gender": "",
     "mobilenumber": "",
-    "address": ""
+    "address": "",
+    "points": "",
+    "userRoleId": ""
+
 }
 
 ###
@@ -140,7 +143,12 @@ PUT {{LearningAPI_HostAddress}}/user/{{id}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
 {
-    "name": "lattt"
+    "name": "lattt",
+    "id": "5",
+    "mobilenumber": "80232888",
+    "points": "20",
+    "userroleid": "5",
+    "password": "test1234"
     
 }
 
@@ -154,6 +162,17 @@ Authorization: Bearer {{token}}
 
 DELETE {{LearningAPI_HostAddress}}/user/5
 Authorization: Bearer {{token}}
+### implement
+
+PUT {{LearningAPI_HostAddress}}/user/password/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "password": "",
+  "newPassword": ""
+}
+
 ###
 
 # ----------------------------     user role    ------------------------------------------
@@ -161,8 +180,8 @@ POST {{LearningAPI_HostAddress}}/userrole
 Content-Type: application/json
 
 {
-  "role": "customer",
-  "description": "testestetst"
+  "role": "admin",
+  "description": "admin stuff"
 }
 
 ###
@@ -179,12 +198,23 @@ PUT {{LearningAPI_HostAddress}}/userrole/1
 Content-Type: application/json
 
 {
-  "role": "customer",
+  "role": "manager",
   "description": "heheheas"
 }
 
 ###
 
-DELETE {{LearningAPI_HostAddress}}/userrole/3
+DELETE {{LearningAPI_HostAddress}}/userrole/1
 
 ###
+
+PUT {{LearningAPI_HostAddress}}/user/password/{{id}}
+Content-Type: application/json
+
+{
+  //UpdateUserPasswordRequest
+}
+
+###
+# role name cannot be repeated
+

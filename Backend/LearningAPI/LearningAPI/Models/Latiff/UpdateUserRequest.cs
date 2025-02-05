@@ -23,5 +23,7 @@ namespace LearningAPI.Models.Latiff
         public string? MobileNumber { get; set; } 
         [MinLength(3), MaxLength(200)]
         public string? Address { get; set; } 
+        public int? Points { get; set; }
+        public int? UserRoleId { get; set; }
     }
 }

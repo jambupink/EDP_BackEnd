@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using BCrypt.Net;
 using LearningAPI.Models.Latiff;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Mysqlx.Crud;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -216,6 +219,52 @@ namespace LearningAPI.Controllers.Latiff
                 return StatusCode(500);
             }
         }
+        [HttpPut("password/{id}"), Authorize]
+        public async Task<IActionResult> UpdateUserPassword(int id, UpdateUserPasswordRequest user)
+        {
+            try
+            {
+                //Find user
+                var myUser = await context.Users.FindAsync(id);
+                if (myUser == null)
+                {
+                    return NotFound();
+                }
+
+                int userId = GetUserId();
+                if (myUser.Id != userId)
+                {
+                    return Forbid();
+                }
+                
+                if(user.Password != null)
+                {
+                    string message = "Email or password is not correct.";
+                    bool verified = BCrypt.Net.BCrypt.Verify(user.Password, user.NewPassword);
+                    if (!verified)
+                    {
+                        return BadRequest(new { message });
+                    }
+                }
+
+                
+                if (user.NewPassword != null)
+                {
+                    string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.NewPassword);
+                    myUser.Password = passwordHash;
+                }
+                
+                myUser.UpdatedAt = DateTime.Now;
+
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error when updating user password");
+                return StatusCode(500);
+            }
+        }
 
         [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> UpdateUser(int id, UpdateUserRequest user)
@@ -244,7 +293,8 @@ namespace LearningAPI.Controllers.Latiff
                 }
                 if (user.Password != null)
                 {
-                    myUser.Password = user.Password.Trim();
+                    string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                    myUser.Password = passwordHash;
                 }
                 if (user.Gender != null)
                 {
@@ -257,6 +307,14 @@ namespace LearningAPI.Controllers.Latiff
                 if (user.Address != null)
                 {
                     myUser.Address = user.Address.Trim();
+                }
+                if (user.Points != null)
+                {
+                    myUser.Points = (int)user.Points;
+                }
+                if (user.UserRoleId != null)
+                {
+                    myUser.UserRoleId = (int)user.UserRoleId;
                 }
                 myUser.UpdatedAt = DateTime.Now;
 
