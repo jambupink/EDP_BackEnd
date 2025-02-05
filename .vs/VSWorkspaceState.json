@@ -2,11 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\Backend",
-    "\\Backend\\LearningAPI",
-    "\\Backend\\LearningAPI\\LearningAPI",
-    "\\Backend\\LearningAPI\\LearningAPI\\Controllers",
-    "\\Backend\\LearningAPI\\LearningAPI\\Models"
+    "\\Backend\\LearningAPI"
   ],
-  "SelectedNode": "\\Backend\\LearningAPI\\LearningAPI\\Controllers\\OrderController.cs",
+  "SelectedNode": "\\Backend\\LearningAPI\\LearningAPI.sln",
   "PreviewInSolutionExplorer": false
 }
