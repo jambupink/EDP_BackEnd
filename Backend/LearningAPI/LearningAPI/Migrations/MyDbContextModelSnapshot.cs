@@ -319,6 +319,7 @@ namespace LearningAPI.Migrations
                     b.Navigation("OrderItems");
                 });
 
+
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
                 {
                     b.Navigation("Products");
