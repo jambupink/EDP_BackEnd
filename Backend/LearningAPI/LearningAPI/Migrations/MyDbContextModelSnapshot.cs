@@ -38,10 +38,20 @@ namespace LearningAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("EmailConfirmationToken")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("EmailConfirmationTokenExpiry")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("MobileNumber")
                         .IsRequired()

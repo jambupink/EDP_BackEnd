@@ -1,5 +1,5 @@
 ﻿@LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI2IiwidW5pcXVlX25hbWUiOiJsYXR0dCIsImVtYWlsIjoibGF0QGdtYWlsLmNvbSIsInJvbGUiOiIxIiwibmJmIjoxNzM3NTMxNzIzLCJleHAiOjE3NDAxMjM3MjMsImlhdCI6MTczNzUzMTcyM30.xxRMLPfBNpdTnUCqVL6s24wTLA7LJU8uSdY3ZLuMy7o
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJsYXRpZmYiLCJlbWFpbCI6ImxhdGlmZjA2MDFAZ21haWwuY29tIiwicm9sZSI6IjEiLCJuYmYiOjE3Mzg3NDgyMjIsImV4cCI6MTc0MTM0MDIyMiwiaWF0IjoxNzM4NzQ4MjIyfQ.4XpcTuOrLS5PvahvE5dQNdsthzoqjeLt6mqwDfH9A48
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -88,7 +88,30 @@ Content-Type: application/json
 }
 
 ###
+POST {{LearningAPI_HostAddress}}/user/register
+Content-Type: application/json
 
+{
+  "name": "latiff",
+  "email": "latiff0601@gmail.com",
+  "password": "test1234"
+}
+
+###
+# @token = 5xyJptLGevHkLvHFAKcjQrKdtf1uoKpcnAu79G-9VL6WQ5khSF-yNiwe3vQCl09h
+
+GET {{LearningAPI_HostAddress}}/user/confirm-email?token={{token}}
+
+###
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+  "email": "latiff0601@gmail.com",
+  "password": "test2345"
+}
+
+###
 POST {{LearningAPI_HostAddress}}/user/login
 Content-Type: application/json
 
@@ -116,7 +139,7 @@ GET {{LearningAPI_HostAddress}}/user?search=bel
 
 ###
 
-@id=6
+@id=1
 GET {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
 
@@ -133,7 +156,8 @@ Authorization: Bearer {{token}}
     "mobilenumber": "",
     "address": "",
     "points": "",
-    "userRoleId": ""
+    "userRoleId": "",
+    "isEmailConfirmed": ""
 
 }
 
@@ -144,11 +168,8 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 {
     "name": "lattt",
-    "id": "5",
-    "mobilenumber": "80232888",
-    "points": "20",
-    "userroleid": "5",
-    "password": "test1234"
+    "userRoleId": "2t"
+    
     
 }
 
@@ -169,8 +190,8 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "password": "",
-  "newPassword": ""
+  "password": "test1234",
+  "newPassword": "test2345"
 }
 
 ###
@@ -180,12 +201,20 @@ POST {{LearningAPI_HostAddress}}/userrole
 Content-Type: application/json
 
 {
-  "role": "admin",
-  "description": "admin stuff"
+  "role": "customer",
+  "description": "Default role. Customer"
 }
 
 ###
+POST {{LearningAPI_HostAddress}}/userrole
+Content-Type: application/json
 
+{
+  "role": "admin",
+  "description": "Admin role"
+}
+
+###
 GET {{LearningAPI_HostAddress}}/userrole
 
 ###
@@ -218,3 +247,8 @@ Content-Type: application/json
 ###
 # role name cannot be repeated
 
+
+
+GET {{LearningAPI_HostAddress}}/user/confirm-email?token={{token}}
+
+###

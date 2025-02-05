@@ -1,11 +1,15 @@
 using AutoMapper;
 using LearningAPI;
+using LearningAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//email 
+builder.Services.AddSingleton<EmailService>();
 
 // Add services to the container.
 builder.Services.AddControllers();
