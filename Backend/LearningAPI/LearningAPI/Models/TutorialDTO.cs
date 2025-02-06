@@ -1,4 +1,6 @@
-﻿namespace LearningAPI.Models
+﻿using LearningAPI.Models.Latiff;
+
+namespace LearningAPI.Models
 {
     public class TutorialDTO
     {
