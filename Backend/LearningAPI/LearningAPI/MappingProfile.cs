@@ -11,7 +11,9 @@ namespace LearningAPI
             CreateMap<Product, ProductDTO>();
             CreateMap<User, UserDTO>();
             CreateMap<User, UserBasicDTO>();
+      			CreateMap<Donation, DonationDTO>();
             CreateMap<UserRole, UserRoleDTO>();
         }
+
     }
 }

@@ -1,7 +1,7 @@
 
+
 @LearningAPI_HostAddress = https://localhost:7004
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJsYXRAZ21haWwuY29tIiwicm9sZSI6IjEiLCJuYmYiOjE3Mzg3NjY3ODAsImV4cCI6MTc0MTM1ODc4MCwiaWF0IjoxNzM4NzY2NzgwfQ.-lYNa6eInx1S40Q7RzzPYJnJ2XL-DAluURX-cPyt3ds
-
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -477,24 +477,6 @@ Authorization: Bearer {{token}}
 
 ###
 
-POST {{LearningAPI_HostAddress}}/orders
 
-###
-
-POST {{LearningAPI_HostAddress}}/payment
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-   "PaymentMethod": "Credit Card",
-  "CustomerName": "John Doe",
-  "Cvc": "123",
-  "Amount": 50.00,
-  "CardNo": "4686676683763423"
-}
-
-###
-
-GET {{LearningAPI_HostAddress}}/cart/cartitem/37
 
 ###
