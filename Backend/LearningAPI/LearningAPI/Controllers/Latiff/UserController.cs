@@ -1,9 +1,14 @@
 ﻿using AutoMapper;
+using BCrypt.Net;
 using LearningAPI.Models.Latiff;
+using LearningAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Mysqlx.Crud;
+using NanoidDotNet;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,8 +18,29 @@ namespace LearningAPI.Controllers.Latiff
     [ApiController]
     [Route("[controller]")]
     public class UserController(MyDbContext context, IConfiguration configuration, IMapper mapper,
-        ILogger<UserController> logger) : ControllerBase
+        ILogger<UserController> logger, EmailService emailService) : ControllerBase
     {
+        private readonly EmailService _emailService = emailService;
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string token)
+        {
+            var user = await context.Users
+                .FirstOrDefaultAsync(u => u.EmailConfirmationToken == token);
+
+            if (user == null || user.EmailConfirmationTokenExpiry < DateTime.UtcNow)
+            {
+                return BadRequest(new { message = "Invalid or expired token" });
+            }
+
+            user.IsEmailConfirmed = true;
+            user.EmailConfirmationToken = String.Empty;
+            user.EmailConfirmationTokenExpiry = null;
+
+            await context.SaveChangesAsync();
+            return Ok(new { message = "Email confirmed successfully" });
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
@@ -41,16 +67,22 @@ namespace LearningAPI.Controllers.Latiff
                 }
                 var now = DateTime.Now;
                 string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+                var confirmationToken = Nanoid.Generate(size: 64);
                 var user = new User()
                 {
                     Name = request.Name,
                     Email = request.Email,
                     Password = passwordHash,
                     UserRoleId = 1,
+                    EmailConfirmationToken = confirmationToken,
+                    EmailConfirmationTokenExpiry = DateTime.UtcNow.AddHours(24),
                     CreatedAt = now,
                     UpdatedAt = now
                 };
 
+                var clientBaseUrl = configuration.GetValue<string>("ClientBaseUrl");
+                var confirmationLink = $"{clientBaseUrl}/confirm-email?token={confirmationToken}";
+                _emailService.SendConfirmationEmail(user.Email, confirmationLink);
                 // Add user
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
@@ -85,6 +117,10 @@ namespace LearningAPI.Controllers.Latiff
                 if (!verified)
                 {
                     return BadRequest(new { message });
+                }
+                if (!foundUser.IsEmailConfirmed)
+                {
+                    return BadRequest(new { message = "Email is not verified. Please check your inbox" });
                 }
 
                 // Return user info
@@ -205,6 +241,13 @@ namespace LearningAPI.Controllers.Latiff
                     return NotFound(new { message = "User not found." });
                 }
 
+                var (userId, userRoleId) = GetUserInfo();
+
+                // ✅ Allow user to view their own profile OR admins to view any profile
+                if (user.Id != userId && userRoleId != 2)
+                {
+                    return Forbid();
+                }
                 var UserDTO = mapper.Map<UserDTO>(user);
 
                 return Ok(UserDTO);
@@ -213,6 +256,54 @@ namespace LearningAPI.Controllers.Latiff
             {
                 logger.LogError(ex, "Error when fetching user by ID");
 
+                return StatusCode(500);
+            }
+        }
+        [HttpPut("password/{id}"), Authorize]
+        public async Task<IActionResult> UpdateUserPassword(int id, UpdateUserPasswordRequest user)
+        {
+            try
+            {
+                logger.LogInformation($"Received request to update password for user ID: {id}");
+                //Find user
+                var myUser = await context.Users.FindAsync(id);
+                if (myUser == null)
+                {
+                    return NotFound();
+                }
+
+                var (userId, userRoleId) = GetUserInfo();
+
+                if (myUser.Id != userId && userRoleId != 2)
+                {
+                    return Forbid();
+                }
+
+                if (user.Password != null)
+                {
+                    string message = "Email or password is not correct.";
+                    bool verified = BCrypt.Net.BCrypt.Verify(user.Password, myUser.Password);
+                    if (!verified)
+                    {
+                        return BadRequest(new { message });
+                    }
+                }
+
+                
+                if (user.NewPassword != null)
+                {
+                    string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.NewPassword);
+                    myUser.Password = passwordHash;
+                }
+                
+                myUser.UpdatedAt = DateTime.Now;
+
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error when updating user password");
                 return StatusCode(500);
             }
         }
@@ -228,8 +319,9 @@ namespace LearningAPI.Controllers.Latiff
                     return NotFound();
                 }
 
-                int userId = GetUserId();
-                if (myUser.Id != userId)
+                var (userId, userRoleId) = GetUserInfo();
+
+                if (myUser.Id != userId && userRoleId != 2)
                 {
                     return Forbid();
                 }
@@ -244,7 +336,8 @@ namespace LearningAPI.Controllers.Latiff
                 }
                 if (user.Password != null)
                 {
-                    myUser.Password = user.Password.Trim();
+                    string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                    myUser.Password = passwordHash;
                 }
                 if (user.Gender != null)
                 {
@@ -258,6 +351,18 @@ namespace LearningAPI.Controllers.Latiff
                 {
                     myUser.Address = user.Address.Trim();
                 }
+                if (user.Points != null)
+                {
+                    myUser.Points = (int)user.Points;
+                }
+                if (user.UserRoleId != null)
+                {
+                    myUser.UserRoleId = (int)user.UserRoleId;
+                }
+                if (user.IsEmailConfirmed != null)
+                {
+                    myUser.IsEmailConfirmed = (bool)user.IsEmailConfirmed;
+                }
                 myUser.UpdatedAt = DateTime.Now;
 
                 await context.SaveChangesAsync();
@@ -269,11 +374,19 @@ namespace LearningAPI.Controllers.Latiff
                 return StatusCode(500);
             }
         }
-        private int GetUserId()
+        private (int userId, int userRoleId) GetUserInfo()
         {
-            return Convert.ToInt32(User.Claims
+            int userId = Convert.ToInt32(User.Claims
                 .Where(c => c.Type == ClaimTypes.NameIdentifier)
-                .Select(c => c.Value).SingleOrDefault());
+                .Select(c => c.Value)
+                .SingleOrDefault());
+
+            int userRoleId = Convert.ToInt32(User.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .SingleOrDefault());
+
+            return (userId, userRoleId);
         }
 
         [HttpDelete("{id}"), Authorize]
@@ -287,8 +400,9 @@ namespace LearningAPI.Controllers.Latiff
                     return NotFound();
                 }
 
-                int userId = GetUserId();
-                if (myUser.Id != userId)
+                var (userId, userRoleId) = GetUserInfo();
+
+                if (myUser.Id != userId && userRoleId != 2)
                 {
                     return Forbid();
                 }

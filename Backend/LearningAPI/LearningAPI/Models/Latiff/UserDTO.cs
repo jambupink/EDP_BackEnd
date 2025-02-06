@@ -10,6 +10,7 @@
         public string Gender { get; set; } = string.Empty;
         public string MobileNumber { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        public bool IsEmailConfirmed { get; set; } = false;
         public int Points { get; set; } = 0;
         public int UserRoleId { get; set; }
     }

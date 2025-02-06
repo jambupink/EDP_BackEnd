@@ -1,5 +1,7 @@
+
 @LearningAPI_HostAddress = https://localhost:7004
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJsYXRAZ21haWwuY29tIiwicm9sZSI6IjEiLCJuYmYiOjE3Mzg3NjY3ODAsImV4cCI6MTc0MTM1ODc4MCwiaWF0IjoxNzM4NzY2NzgwfQ.-lYNa6eInx1S40Q7RzzPYJnJ2XL-DAluURX-cPyt3ds
+
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -72,6 +74,7 @@ PUT {{LearningAPI_HostAddress}}/user/{{id}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
 {
+
     "name": "",
     "email": "",
     "password": "",
@@ -85,22 +88,44 @@ Authorization: Bearer {{token}}
 PUT {{LearningAPI_HostAddress}}/user/{{id}}
   "name": "latt",
   "email": "lat@gmail.com",
+
   "password": "test1234"
 }
 
 ###
-
 POST {{LearningAPI_HostAddress}}/user/register
 Content-Type: application/json
 
 {
-  "name": "betlst",
-  "email": "belt@gmail.com",
+  "name": "latiff",
+  "email": "platiff174@gmail.com",
   "password": "test1234"
 }
 
 ###
+# @token = 5xyJptLGevHkLvHFAKcjQrKdtf1uoKpcnAu79G-9VL6WQ5khSF-yNiwe3vQCl09h
 
+GET {{LearningAPI_HostAddress}}/user/confirm-email?token={{token}}
+
+###
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+  "email": "latiff0601@gmail.com",
+  "password": "test12345"
+}
+
+###
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+  "email": "platiff174@gmail.com",
+  "password": "test1234"
+}
+
+###
 POST {{LearningAPI_HostAddress}}/user/login
 Content-Type: application/json
 
@@ -128,7 +153,7 @@ GET {{LearningAPI_HostAddress}}/user?search=bel
 
 ###
 
-@id=6
+@id=1
 GET {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
 {
@@ -181,7 +206,11 @@ Authorization: Bearer {{token}}
     "password": "",
     "gender": "",
     "mobilenumber": "",
-    "address": ""
+    "address": "",
+    "points": "",
+    "userRoleId": "",
+    "isEmailConfirmed": ""
+
 }
 
 ###
@@ -190,6 +219,7 @@ PUT {{LearningAPI_HostAddress}}/user/{{id}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
 {
+
   "role": "customer",
   "description": "heheheas"
 }
@@ -237,6 +267,7 @@ DELETE {{LearningAPI_HostAddress}}/product/1
 POST {{LearningAPI_HostAddress}}/product
 Content-Type: application/json
     "name": "lattt"
+
     
 }
 
@@ -248,8 +279,19 @@ Authorization: Bearer {{token}}
 # might be important
 ###
 
-DELETE {{LearningAPI_HostAddress}}/user/5
+DELETE {{LearningAPI_HostAddress}}/user/3
 Authorization: Bearer {{token}}
+### implement
+
+PUT {{LearningAPI_HostAddress}}/user/password/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "password": "test1234",
+  "newPassword": "test2345"
+}
+
 ###
 
 # ----------------------------     user role    ------------------------------------------
@@ -258,11 +300,19 @@ Content-Type: application/json
 
 {
   "role": "customer",
-  "description": "testestetst"
+  "description": "Default role. Customer"
 }
 
 ###
+POST {{LearningAPI_HostAddress}}/userrole
+Content-Type: application/json
 
+{
+  "role": "admin",
+  "description": "Admin role"
+}
+
+###
 GET {{LearningAPI_HostAddress}}/userrole
 
 ###
@@ -275,13 +325,29 @@ PUT {{LearningAPI_HostAddress}}/userrole/1
 Content-Type: application/json
 
 {
-  "role": "customer",
+  "role": "manager",
   "description": "heheheas"
 }
 
 ###
 
-DELETE {{LearningAPI_HostAddress}}/userrole/3
+DELETE {{LearningAPI_HostAddress}}/userrole/1
+
+###
+
+PUT {{LearningAPI_HostAddress}}/user/password/{{id}}
+Content-Type: application/json
+
+{
+  //UpdateUserPasswordRequest
+}
+
+###
+# role name cannot be repeated
+
+
+
+GET {{LearningAPI_HostAddress}}/user/confirm-email?token={{token}}
 
 {
   "productName": "New Test Product",

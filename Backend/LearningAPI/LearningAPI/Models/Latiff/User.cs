@@ -25,6 +25,10 @@ namespace LearningAPI.Models.Latiff
         public string Address { get; set; } = string.Empty;
         public int Points { get; set; } = 0;
 
+        public bool IsEmailConfirmed { get; set; } = false;
+        public string EmailConfirmationToken { get; set; } = string.Empty;
+        public DateTime? EmailConfirmationTokenExpiry { get; set; }
+
         [Column(TypeName = "datetime")]
         public DateTime CreatedAt { get; set; }
 
