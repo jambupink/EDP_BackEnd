@@ -1,67 +1,15 @@
-﻿@LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJsYXR0aWZmIiwiZW1haWwiOiJsYXRpZmYwNjAxQGdtYWlsLmNvbSIsInJvbGUiOiIyIiwibmJmIjoxNzM4Nzg3MzUyLCJleHAiOjE3NDEzNzkzNTIsImlhdCI6MTczODc4NzM1Mn0.KJLbqHSQwnUtGK05WFvYL2BSbd2RZe-ykRso6QXKdrI
+
+@LearningAPI_HostAddress = https://localhost:7004
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJsYXRAZ21haWwuY29tIiwicm9sZSI6IjEiLCJuYmYiOjE3Mzg3NjY3ODAsImV4cCI6MTc0MTM1ODc4MCwiaWF0IjoxNzM4NzY2NzgwfQ.-lYNa6eInx1S40Q7RzzPYJnJ2XL-DAluURX-cPyt3ds
+
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
 
-GET {{LearningAPI_HostAddress}}/tutorial?search=hello
-
-###
-
-GET {{LearningAPI_HostAddress}}/tutorial/1
-
-###
-
-POST {{LearningAPI_HostAddress}}/user/register
-Content-Type: application/json
-
-{
- "name": "Li Haiyun",
- "email": "li_haiyun@nyp.edu.sg",
- "password": "password123"
-}
-
-###
-
-POST {{LearningAPI_HostAddress}}/user/login
-Content-Type: application/json
-
-{
- "email": "li_haiyun@nyp.edu.sg",
- "password": "password123"
-}
-
-###
 
 GET {{LearningAPI_HostAddress}}/user/auth
-Authorization: Bearer {{token}}
-
-###
-POST {{LearningAPI_HostAddress}}/tutorial
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
- "title": "Web API",
- "description": "Happy coding :)"
-}
-
-###
-
-PUT {{LearningAPI_HostAddress}}/tutorial/1
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
- "title": "My Story",
- "description": "Your Song ❤"
-}
-
-###
-
-DELETE {{LearningAPI_HostAddress}}/tutorial/2
 Authorization: Bearer {{token}}
 
 ###
@@ -71,8 +19,76 @@ POST {{LearningAPI_HostAddress}}/user/register
 Content-Type: application/json
 
 {
-  "name": "latiff",
-  "email": "latiff0601@gmail.com",
+  "name": "latt",
+  "email": "lat@gmail.com",
+  "password": "test1234"
+}
+
+###
+
+POST {{LearningAPI_HostAddress}}/user/register
+Content-Type: application/json
+
+{
+  "name": "betlst",
+  "email": "belt@gmail.com",
+  "password": "test1234"
+}
+
+###
+
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+  "email": "belt@gmail.com",
+  "password": "test1234"
+}
+
+###
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+  "email": "lat@gmail.com",
+  "password": "test1234"
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/user
+
+###
+
+GET {{LearningAPI_HostAddress}}/user?search=bel
+
+###
+
+@id=6
+GET {{LearningAPI_HostAddress}}/user/{{id}}
+Authorization: Bearer {{token}}
+
+###
+
+PUT {{LearningAPI_HostAddress}}/user/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
+
+    "name": "",
+    "email": "",
+    "password": "",
+    "gender": "",
+    "mobilenumber": "",
+    "address": ""
+}
+
+###
+
+PUT {{LearningAPI_HostAddress}}/user/{{id}}
+  "name": "latt",
+  "email": "lat@gmail.com",
+
   "password": "test1234"
 }
 
@@ -140,6 +156,44 @@ GET {{LearningAPI_HostAddress}}/user?search=bel
 @id=1
 GET {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
+{
+    "name": "lattt"
+    
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/user/auth
+Authorization: Bearer {{token}}
+# need to fix the bug where after changing name, it doesnt show updated name in the auth
+# might be important
+###
+
+DELETE {{LearningAPI_HostAddress}}/user/5
+Authorization: Bearer {{token}}
+###
+
+# ----------------------------     user role    ------------------------------------------
+POST {{LearningAPI_HostAddress}}/userrole
+Content-Type: application/json
+
+{
+  "role": "customer",
+  "description": "testestetst"
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/userrole
+
+###
+
+GET {{LearningAPI_HostAddress}}/userrole/2
+
+###
+
+PUT {{LearningAPI_HostAddress}}/userrole/1
+Content-Type: application/json
 
 ###
 
@@ -165,9 +219,55 @@ PUT {{LearningAPI_HostAddress}}/user/{{id}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
 {
-    "name": "lattt",
-    "userRoleId": "2"
-    
+
+  "role": "customer",
+  "description": "heheheas"
+}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/userrole/3
+
+###
+# ----------------------------     product    ------------------------------------------
+GET {{LearningAPI_HostAddress}}/product/product/13
+
+###
+
+# POST {{LearningAPI_HostAddress}}/product
+# Content-Type: application/json
+# Authorization: Bearer {{token}}
+
+# {
+#   "productName": "New Test Product",
+#   "description": "Test Description",
+#   "isArchived": false,
+#   "imageFiles": "shirt.png"
+# }
+
+###
+
+PUT {{LearningAPI_HostAddress}}/product/1
+Content-Type: application/json
+
+{
+  "productName": "Updated Test Product",
+  "description": "Updated Test Description",
+  "isArchived": false,
+  "imageFiles": "shirt.png"
+}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/product/1
+
+###
+
+
+POST {{LearningAPI_HostAddress}}/product
+Content-Type: application/json
+    "name": "lattt"
+
     
 }
 
@@ -248,5 +348,153 @@ Content-Type: application/json
 
 
 GET {{LearningAPI_HostAddress}}/user/confirm-email?token={{token}}
+
+{
+  "productName": "New Test Product",
+  "description": "Test Description",
+  "isArchived": false,
+  "imageFiles": "shirt.png"
+}
+
+###
+# ----------------------------     product    ------------------------------------------
+GET {{LearningAPI_HostAddress}}/product/product/13
+
+###
+
+# POST {{LearningAPI_HostAddress}}/product
+# Content-Type: application/json
+# Authorization: Bearer {{token}}
+
+# {
+#   "productName": "New Test Product",
+#   "description": "Test Description",
+#   "isArchived": false,
+#   "imageFiles": "shirt.png"
+# }
+
+###
+
+PUT {{LearningAPI_HostAddress}}/product/1
+Content-Type: application/json
+
+{
+  "productName": "Updated Test Product",
+  "description": "Updated Test Description",
+  "isArchived": false,
+  "imageFiles": "shirt.png"
+}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/product/1
+
+###
+
+
+POST {{LearningAPI_HostAddress}}/product
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productName": "New Test Product",
+  "description": "Test Description",
+  "isArchived": false,
+  "imageFiles": "shirt.png"
+}
+
+###
+
+POST {{LearningAPI_HostAddress}}/cart
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+[
+  {
+    "productId": 24,
+    "quantity": 2,
+    "price": 3,
+    "productname": "yeap",
+    "size": "S"
+  },
+  {
+    "productId": 25,
+    "quantity": 1,
+    "price": 5,
+    "productname": "nice",
+    "size": "M"
+  }
+]
+
+###
+
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/cart/2
+
+###
+
+PUT {{LearningAPI_HostAddress}}/cart/9
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": 23,
+  "quantity": 6
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/cart/1
+
+###
+
+POST {{LearningAPI_HostAddress}}/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+###
+
+GET {{LearningAPI_HostAddress}}/orders
+Authorization: Bearer {{token}}
+
+###
+
+
+
+
+
+GET {{LearningAPI_HostAddress}}/orders/1
+Authorization: Bearer {{token}}
+
+###
+
+
+
+GET {{LearningAPI_HostAddress}}/orders/detail/3
+Authorization: Bearer {{token}}
+
+###
+
+POST {{LearningAPI_HostAddress}}/orders
+
+###
+
+POST {{LearningAPI_HostAddress}}/payment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+   "PaymentMethod": "Credit Card",
+  "CustomerName": "John Doe",
+  "Cvc": "123",
+  "Amount": 50.00,
+  "CardNo": "4686676683763423"
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/cart/cartitem/37
 
 ###

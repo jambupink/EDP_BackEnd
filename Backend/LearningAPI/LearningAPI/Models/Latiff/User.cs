@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -37,7 +37,7 @@ namespace LearningAPI.Models.Latiff
 
         // Navigation property to represent the one-to-many relationship
         [JsonIgnore]
-        public List<Tutorial>? Tutorials { get; set; }
+        public List<Product>? Products { get; set; }
 
         public int UserRoleId { get; set; }
         public UserRole? UserRole { get; set; }
