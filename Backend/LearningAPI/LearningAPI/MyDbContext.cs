@@ -19,5 +19,6 @@ namespace LearningAPI
         public required DbSet<User> Users { get; set; }
 		public required DbSet<Donation> Donations { get; set; }
 		public required DbSet<DonationHistory> DonationHistories { get; set; }
+		public required DbSet<DonationStatus> DonationStatuses { get; set; }
 	}
 }

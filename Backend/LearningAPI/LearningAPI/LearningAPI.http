@@ -113,3 +113,16 @@ DELETE {{LearningAPI_HostAddress}}/donation/0/image
 GET {{LearningAPI_HostAddress}}/donation/0/history
 
 ###
+
+PUT {{LearningAPI_HostAddress}}/donation/0/status
+Content-Type: application/json
+
+{
+  //UpdateStatusRequest
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/donation/0/status
+
+###

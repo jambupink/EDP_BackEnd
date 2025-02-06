@@ -23,47 +23,103 @@ namespace LearningAPI.Controllers
 			this.logger = logger;
 		}
 
+		//[HttpPost("/donate"), Authorize]
+		//[ProducesResponseType(typeof(DonationDTO), StatusCodes.Status200OK)]
+		//public async Task<IActionResult> makeDonation(DonationRequest donationRequest)
+		//{
+		//	try
+		//	{
+		//		int userId = GetUserId();
+		//		var now = DateTime.Now;
+		//		var format = "yyyy-MM-dd HH:mm:ss";
+		//		DateTime? dateTime = null;
+		//
+		//		if (donationRequest.DonationDateTime != null)
+		//		{
+		//			dateTime = DateTime.ParseExact(donationRequest.DonationDateTime, format, CultureInfo.InvariantCulture);
+		//		}
+
+		//		var donation = new Donation()
+		//		{
+		//			UserId = userId,
+		//			CreatedAt = now,
+		//			UpdatedAt = now,
+		//			Title = donationRequest.Title,
+		//			Description = donationRequest.Description,
+		//			ImageFile = donationRequest.ImageFile,
+		//			DonationDateTime = dateTime,
+		//			Condition = donationRequest.Condition
+		//		};
+
+		//		await context.Donations.AddAsync(donation);
+		//		await context.SaveChangesAsync();
+
+		//		DonationDTO donationDTO = mapper.Map<DonationDTO>(donation);
+
+		//		return Ok(donationDTO);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		logger.LogError(ex, "Error in updating donation");
+		//		return StatusCode(500);
+		//	}
+		//}
+
 		[HttpPost("/donate"), Authorize]
-		[ProducesResponseType(typeof(DonationDTO), StatusCodes.Status200OK)]
-		public async Task<IActionResult> makeDonation(DonationRequest donationRequest)
-		{
-			try
-			{
-				int userId = GetUserId();
-				var now = DateTime.Now;
-				var format = "yyyy-MM-dd HH:mm:ss";
-				DateTime? dateTime = null;
+[ProducesResponseType(typeof(DonationDTO), StatusCodes.Status200OK)]
+public async Task<IActionResult> makeDonation(DonationRequest donationRequest)
+{
+    try
+    {
+        int userId = GetUserId();
+        var now = DateTime.Now;
+        var format = "yyyy-MM-dd HH:mm:ss";
+        DateTime? dateTime = null;
 
-				if (donationRequest.DonationDateTime != null)
-				{
-					dateTime = DateTime.ParseExact(donationRequest.DonationDateTime, format, CultureInfo.InvariantCulture);
-				}
+        if (donationRequest.DonationDateTime != null)
+        {
+            dateTime = DateTime.ParseExact(donationRequest.DonationDateTime, format, CultureInfo.InvariantCulture);
+        }
 
-				var donation = new Donation()
-				{
-					UserId = userId,
-					CreatedAt = now,
-					UpdatedAt = now,
-					Title = donationRequest.Title,
-					Description = donationRequest.Description,
-					ImageFile = donationRequest.ImageFile,
-					DonationDateTime = dateTime,
-					Condition = donationRequest.Condition
-				};
+        var donation = new Donation()
+        {
+            UserId = userId,
+            CreatedAt = now,
+            UpdatedAt = now,
+            Title = donationRequest.Title,
+            Description = donationRequest.Description,
+            ImageFile = donationRequest.ImageFile,
+            DonationDateTime = dateTime,
+            Condition = donationRequest.Condition
+        };
 
-				await context.Donations.AddAsync(donation);
-				await context.SaveChangesAsync();
+        await context.Donations.AddAsync(donation);
+        await context.SaveChangesAsync();
 
-				DonationDTO donationDTO = mapper.Map<DonationDTO>(donation);
+        // Assign default status "Pending" to the new donation
+        var donationStatus = new DonationStatus()
+        {
+            DonationId = donation.Id,
+            Status = "Pending",
+            UpdatedAt = DateTime.UtcNow
+        };
 
-				return Ok(donationDTO);
-			}
-			catch (Exception ex)
-			{
-				logger.LogError(ex, "Error in updating donation");
-				return StatusCode(500);
-			}
-		}
+        await context.DonationStatuses.AddAsync(donationStatus);
+        await context.SaveChangesAsync();
+
+        DonationDTO donationDTO = mapper.Map<DonationDTO>(donation);
+
+        return Ok(donationDTO);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error in updating donation");
+        return StatusCode(500);
+    }
+}
+
+
+
 
 		[HttpGet("latest"), Authorize]
 		[ProducesResponseType(typeof(DonationDTO), StatusCodes.Status200OK)]
@@ -292,6 +348,59 @@ namespace LearningAPI.Controllers
 				return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
 			}
 		}
+
+		[HttpGet("{donationId}/status"), Authorize]
+		[ProducesResponseType(typeof(DonationStatus), StatusCodes.Status200OK)]
+		public async Task<IActionResult> GetDonationStatus(int donationId)
+		{
+			try
+			{
+				var status = await context.DonationStatuses
+					.FirstOrDefaultAsync(ds => ds.DonationId == donationId);
+
+				if (status == null)
+				{
+					return NotFound(new { message = "Status not found for this donation." });
+				}
+
+				return Ok(status);
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Error fetching donation status");
+				return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+			}
+		}
+
+		[HttpPut("{donationId}/status"), Authorize]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public async Task<IActionResult> UpdateDonationStatus(int donationId, [FromBody] UpdateStatusRequest request)
+		{
+			try
+			{
+				var donationStatus = await context.DonationStatuses
+					.FirstOrDefaultAsync(ds => ds.DonationId == donationId);
+
+				if (donationStatus == null)
+				{
+					return NotFound(new { message = "Donation status not found." });
+				}
+
+				donationStatus.Status = request.NewStatus;
+				donationStatus.UpdatedAt = DateTime.UtcNow;
+
+				await context.SaveChangesAsync();
+
+				return Ok(new { message = "Donation status updated successfully." });
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex, "Error updating donation status");
+				return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+			}
+		}
+
 
 
 		private int GetUserId()

@@ -84,6 +84,29 @@ namespace LearningAPI.Migrations
                     b.ToTable("DonationHistories");
                 });
 
+            modelBuilder.Entity("LearningAPI.Models.DonationStatus", b =>
+                {
+                    b.Property<int>("StatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("DonationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("StatusId");
+
+                    b.HasIndex("DonationId");
+
+                    b.ToTable("DonationStatuses");
+                });
+
             modelBuilder.Entity("LearningAPI.Models.Tutorial", b =>
                 {
                     b.Property<int>("Id")
@@ -153,6 +176,17 @@ namespace LearningAPI.Migrations
                 });
 
             modelBuilder.Entity("LearningAPI.Models.DonationHistory", b =>
+                {
+                    b.HasOne("LearningAPI.Models.Donation", "Donation")
+                        .WithMany()
+                        .HasForeignKey("DonationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Donation");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.DonationStatus", b =>
                 {
                     b.HasOne("LearningAPI.Models.Donation", "Donation")
                         .WithMany()
