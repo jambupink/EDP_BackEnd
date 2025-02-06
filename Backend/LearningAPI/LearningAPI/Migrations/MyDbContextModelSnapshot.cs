@@ -19,35 +19,6 @@ namespace LearningAPI.Migrations
                 .HasAnnotation("ProductVersion", "8.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("FeedbackContent")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Feedbacks");
-                });
-
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
                 {
                     b.Property<int>("Id")
@@ -164,17 +135,6 @@ namespace LearningAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Tutorials");
-                });
-
-            modelBuilder.Entity("Feedback", b =>
-                {
-                    b.HasOne("LearningAPI.Models.Latiff.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
