@@ -9,11 +9,13 @@ namespace LearningAPI
     {
         public MappingProfile()
         {
-            CreateMap<Tutorial, TutorialDTO>();
+            CreateMap<Product, ProductDTO>();
             CreateMap<User, UserDTO>();
             CreateMap<User, UserBasicDTO>();
+      			CreateMap<Donation, DonationDTO>();
             CreateMap<UserRole, UserRoleDTO>();
             CreateMap<Feedback, FeedbackDTO>();
         }
+
     }
 }

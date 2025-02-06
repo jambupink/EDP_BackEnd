@@ -22,6 +22,9 @@ namespace LearningAPI.Models.Latiff
         [MinLength(3), MaxLength(20)]
         public string? MobileNumber { get; set; } 
         [MinLength(3), MaxLength(200)]
-        public string? Address { get; set; } 
+        public string? Address { get; set; }
+        public bool? IsEmailConfirmed { get; set; } 
+        public int? Points { get; set; }
+        public int? UserRoleId { get; set; }
     }
 }

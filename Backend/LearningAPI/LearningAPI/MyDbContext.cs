@@ -17,11 +17,20 @@ namespace LearningAPI
             }
         }
 
-        public required DbSet<Tutorial> Tutorials { get; set; }
 
-        public required DbSet<User> Users { get; set; }
-        public required DbSet<UserRole> UserRoles { get; set; }
 
-        public required DbSet<Feedback> Feedbacks { get; set; }
-    }
+		public required DbSet<Cart> Carts { get; set; }
+		public required DbSet<Order> Orders { get; set; }
+		public required DbSet<OrderItem> OrderItems { get; set; }
+		public required DbSet<Payment> Payments { get; set; }
+    public required DbSet<User> Users { get; set; }
+		public required DbSet<Donation> Donations { get; set; }
+		public required DbSet<DonationHistory> DonationHistories { get; set; }
+		public required DbSet<DonationStatus> DonationStatuses { get; set; }
+    public required DbSet<UserRole> UserRoles { get; set; }
+		public required DbSet<Product> Products { get; set; }
+     public required DbSet<Feedback> Feedbacks { get; set; }
+
+	}
+
 }
