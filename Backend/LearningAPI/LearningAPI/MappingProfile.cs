@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LearningAPI.Models;
+using LearningAPI.Models.Joseph;
 using LearningAPI.Models.Latiff;
 
 namespace LearningAPI
@@ -13,6 +14,7 @@ namespace LearningAPI
             CreateMap<User, UserBasicDTO>();
       			CreateMap<Donation, DonationDTO>();
             CreateMap<UserRole, UserRoleDTO>();
+            CreateMap<Feedback, FeedbackDTO>();
         }
 
     }

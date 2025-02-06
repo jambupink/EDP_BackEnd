@@ -480,3 +480,25 @@ Authorization: Bearer {{token}}
 
 
 ###
+
+
+POST {{LearningAPI_HostAddress}}/userrole
+Content-Type: application/json
+
+{
+  //UserRole
+}
+
+###
+
+
+POST {{LearningAPI_HostAddress}}/feedback
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
+  "rating": 5,
+  "feedbackContent": "I LOVE THIS GUN"
+  
+}
+
+###

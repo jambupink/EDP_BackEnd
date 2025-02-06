@@ -1,6 +1,8 @@
 ﻿using LearningAPI.Models;
 using LearningAPI.Models.Latiff;
+using LearningAPI.Models.Joseph;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace LearningAPI
 {
@@ -16,6 +18,7 @@ namespace LearningAPI
         }
 
 
+
 		public required DbSet<Cart> Carts { get; set; }
 		public required DbSet<Order> Orders { get; set; }
 		public required DbSet<OrderItem> OrderItems { get; set; }
@@ -26,6 +29,8 @@ namespace LearningAPI
 		public required DbSet<DonationStatus> DonationStatuses { get; set; }
     public required DbSet<UserRole> UserRoles { get; set; }
 		public required DbSet<Product> Products { get; set; }
+     public required DbSet<Feedback> Feedbacks { get; set; }
 
 	}
+
 }
