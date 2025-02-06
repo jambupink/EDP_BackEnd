@@ -1,6 +1,8 @@
 ﻿using LearningAPI.Models;
 using LearningAPI.Models.Latiff;
+using LearningAPI.Models.Joseph;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace LearningAPI
 {
@@ -19,5 +21,7 @@ namespace LearningAPI
 
         public required DbSet<User> Users { get; set; }
         public required DbSet<UserRole> UserRoles { get; set; }
+
+        public required DbSet<Feedback> Feedbacks { get; set; }
     }
 }
