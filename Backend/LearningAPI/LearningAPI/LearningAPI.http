@@ -137,7 +137,7 @@ GET {{LearningAPI_HostAddress}}/user?search=bel
 
 ###
 
-@id=3
+@id=1
 GET {{LearningAPI_HostAddress}}/user/{{id}}
 Authorization: Bearer {{token}}
 
