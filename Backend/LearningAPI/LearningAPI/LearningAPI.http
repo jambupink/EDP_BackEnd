@@ -21,6 +21,7 @@ Content-Type: application/json
  "name": "Li Haiyun",
  "email": "li_haiyun@nyp.edu.sg",
  "password": "password123"
+
 }
 
 ###
@@ -186,5 +187,26 @@ Content-Type: application/json
 ###
 
 DELETE {{LearningAPI_HostAddress}}/userrole/3
+
+###
+
+POST {{LearningAPI_HostAddress}}/userrole
+Content-Type: application/json
+
+{
+  //UserRole
+}
+
+###
+
+
+POST {{LearningAPI_HostAddress}}/feedback
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
+  "rating": 5,
+  "feedbackContent": "I LOVE THIS GUN"
+  
+}
 
 ###
