@@ -22,6 +22,45 @@ namespace LearningAPI.Controllers.Joseph
             _logger = logger;
         }
 
+
+        [HttpPut("{id}"), Authorize]
+        [ProducesResponseType(typeof(FeedbackDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> EditFeedback(int id, UpdateFeedbackRequest request)
+        {
+            try
+            {
+                // Get the logged-in user's ID
+                int userId = GetUserId();
+
+                // Retrieve the feedback to be updated
+                var feedback = await _context.Feedbacks.SingleOrDefaultAsync(f => f.Id == id && f.UserId == userId);
+                if (feedback == null)
+                {
+                    return NotFound("Feedback not found or does not belong to the user.");
+                }
+
+                // Update feedback properties
+                feedback.Rating = request.Rating;
+                feedback.FeedbackContent = request.FeedbackContent?.Trim();
+                feedback.UpdatedAt = DateTime.Now;
+
+                // Save changes to the database
+                _context.Feedbacks.Update(feedback);
+                await _context.SaveChangesAsync();
+
+                // Convert to DTO and return response
+                var feedbackDTO = _mapper.Map<FeedbackDTO>(feedback);
+                return Ok(feedbackDTO);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating feedback");
+                return StatusCode(500, "An error occurred while updating feedback.");
+            }
+        }
+
         [HttpDelete("{id}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -78,6 +117,27 @@ namespace LearningAPI.Controllers.Joseph
                 return StatusCode(500, "An error occurred while retrieving feedbacks.");
             }
         }
+
+        [HttpGet("all-feedbacks"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllFeedbacks()
+        {
+            try
+            {
+                var feedbacks = await _context.Feedbacks
+                    .Include(f => f.User)
+                    .OrderByDescending(f => f.UpdatedAt)
+                    .ToListAsync();
+
+                var feedbackDTOs = _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks);
+                return Ok(feedbackDTOs);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving all feedbacks");
+                return StatusCode(500, "An error occurred while retrieving feedbacks.");
+            }
+        }
+
 
 
         [HttpPost, Authorize]

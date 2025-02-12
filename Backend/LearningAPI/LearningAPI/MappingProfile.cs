@@ -9,12 +9,18 @@ namespace LearningAPI
     {
         public MappingProfile()
         {
-            CreateMap<Product, ProductDTO>();
+            CreateMap<Product, ProductDTO>().ReverseMap();
+            //.ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
+            //.ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+            //.ForMember(dest => dest.Variants, opt => opt.MapFrom(src => src.Variants));
+            
             CreateMap<User, UserDTO>();
             CreateMap<User, UserBasicDTO>();
-      			CreateMap<Donation, DonationDTO>();
+      		CreateMap<Donation, DonationDTO>();
             CreateMap<UserRole, UserRoleDTO>();
             CreateMap<Feedback, FeedbackDTO>();
+            
+            CreateMap<Variant, VariantDTO>().ReverseMap();
         }
 
     }

@@ -3,6 +3,7 @@ using System;
 using LearningAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LearningAPI.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250212074934_UpdateCategoryModel")]
+    partial class UpdateCategoryModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +80,27 @@ namespace LearningAPI.Migrations
                     b.HasKey("CartId");
 
                     b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Donation", b =>
@@ -367,15 +391,8 @@ namespace LearningAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("CategoryGender")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -404,6 +421,8 @@ namespace LearningAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
@@ -510,11 +529,17 @@ namespace LearningAPI.Migrations
 
             modelBuilder.Entity("LearningAPI.Models.Product", b =>
                 {
+                    b.HasOne("LearningAPI.Models.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("LearningAPI.Models.Latiff.User", "User")
                         .WithMany("Products")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("User");
                 });
@@ -528,6 +553,11 @@ namespace LearningAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Category", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>

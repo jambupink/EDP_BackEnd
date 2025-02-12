@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LearningAPI.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20250205182540_cartuserid")]
-    partial class cartuserid
+    [Migration("20250211193346_AddCategoryAndVariantToProduct")]
+    partial class AddCategoryAndVariantToProduct
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,35 @@ namespace LearningAPI.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("FeedbackContent")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feedbacks");
+                });
 
             modelBuilder.Entity("LearningAPI.Models.Cart", b =>
                 {
@@ -53,6 +82,115 @@ namespace LearningAPI.Migrations
                     b.ToTable("Carts");
                 });
 
+            modelBuilder.Entity("LearningAPI.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Donation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Condition")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime?>("DonationDateTime")
+                        .IsRequired()
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("ImageFile")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Donations");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.DonationHistory", b =>
+                {
+                    b.Property<int>("HistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ChangeDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("ChangeDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("DonationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HistoryId");
+
+                    b.HasIndex("DonationId");
+
+                    b.ToTable("DonationHistories");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.DonationStatus", b =>
+                {
+                    b.Property<int>("StatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("DonationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("StatusId");
+
+                    b.HasIndex("DonationId");
+
+                    b.ToTable("DonationStatuses");
+                });
+
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
                 {
                     b.Property<int>("Id")
@@ -72,10 +210,20 @@ namespace LearningAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("EmailConfirmationToken")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("EmailConfirmationTokenExpiry")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("MobileNumber")
                         .IsRequired()
@@ -243,6 +391,9 @@ namespace LearningAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
 
@@ -269,11 +420,78 @@ namespace LearningAPI.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("VariantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("VariantId");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Variant", b =>
+                {
+                    b.Property<int>("VariantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(6,2)");
+
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("varchar(5)");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.HasKey("VariantId");
+
+                    b.ToTable("Variants");
+                });
+
+            modelBuilder.Entity("Feedback", b =>
+                {
+                    b.HasOne("LearningAPI.Models.Latiff.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.DonationHistory", b =>
+                {
+                    b.HasOne("LearningAPI.Models.Donation", "Donation")
+                        .WithMany()
+                        .HasForeignKey("DonationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Donation");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.DonationStatus", b =>
+                {
+                    b.HasOne("LearningAPI.Models.Donation", "Donation")
+                        .WithMany()
+                        .HasForeignKey("DonationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Donation");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
@@ -311,13 +529,30 @@ namespace LearningAPI.Migrations
 
             modelBuilder.Entity("LearningAPI.Models.Product", b =>
                 {
+                    b.HasOne("LearningAPI.Models.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("LearningAPI.Models.Latiff.User", "User")
                         .WithMany("Products")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("LearningAPI.Models.Variant", "Variant")
+                        .WithMany("Products")
+                        .HasForeignKey("VariantId");
+
+                    b.Navigation("Category");
+
                     b.Navigation("User");
+
+                    b.Navigation("Variant");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Category", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
@@ -333,6 +568,11 @@ namespace LearningAPI.Migrations
             modelBuilder.Entity("LearningAPI.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Variant", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

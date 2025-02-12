@@ -3,6 +3,7 @@ using System;
 using LearningAPI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,43 +11,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LearningAPI.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250212083138_FeedbackModels")]
+    partial class FeedbackModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("FeedbackContent")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Feedbacks");
-                });
 
             modelBuilder.Entity("LearningAPI.Models.Cart", b =>
                 {
@@ -77,6 +51,27 @@ namespace LearningAPI.Migrations
                     b.HasKey("CartId");
 
                     b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Donation", b =>
@@ -165,6 +160,35 @@ namespace LearningAPI.Migrations
                     b.HasIndex("DonationId");
 
                     b.ToTable("DonationStatuses");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Joseph.Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("FeedbackContent")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
@@ -367,15 +391,8 @@ namespace LearningAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("CategoryGender")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -404,6 +421,8 @@ namespace LearningAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
@@ -442,17 +461,6 @@ namespace LearningAPI.Migrations
                     b.ToTable("Variants");
                 });
 
-            modelBuilder.Entity("Feedback", b =>
-                {
-                    b.HasOne("LearningAPI.Models.Latiff.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LearningAPI.Models.DonationHistory", b =>
                 {
                     b.HasOne("LearningAPI.Models.Donation", "Donation")
@@ -473,6 +481,17 @@ namespace LearningAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Donation");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Joseph.Feedback", b =>
+                {
+                    b.HasOne("LearningAPI.Models.Latiff.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
@@ -510,11 +529,17 @@ namespace LearningAPI.Migrations
 
             modelBuilder.Entity("LearningAPI.Models.Product", b =>
                 {
+                    b.HasOne("LearningAPI.Models.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("LearningAPI.Models.Latiff.User", "User")
                         .WithMany("Products")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("User");
                 });
@@ -528,6 +553,11 @@ namespace LearningAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("LearningAPI.Models.Category", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>

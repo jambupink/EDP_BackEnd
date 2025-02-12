@@ -97,9 +97,9 @@ POST {{LearningAPI_HostAddress}}/user/register
 Content-Type: application/json
 
 {
-  "name": "latiff",
-  "email": "platiff174@gmail.com",
-  "password": "test1234"
+  "name": "joseph",
+  "email": "josephtay.dzdstm@gmail.com",
+  "password": "testpassword1!",
 }
 
 ###
@@ -169,7 +169,7 @@ Authorization: Bearer {{token}}
 # might be important
 ###
 
-DELETE {{LearningAPI_HostAddress}}/user/5
+DELETE {{LearningAPI_HostAddress}}/user/2
 Authorization: Bearer {{token}}
 ###
 
@@ -178,8 +178,8 @@ POST {{LearningAPI_HostAddress}}/userrole
 Content-Type: application/json
 
 {
-  "role": "customer",
-  "description": "testestetst"
+  "role": "admin",
+  "description": "admin"
 }
 
 ###
@@ -214,6 +214,7 @@ Authorization: Bearer {{token}}
 }
 
 ###
+PUT {{LearningAPI_HostAddress}}/user/
 
 PUT {{LearningAPI_HostAddress}}/user/{{id}}
 Content-Type: application/json
@@ -227,49 +228,6 @@ Authorization: Bearer {{token}}
 ###
 
 DELETE {{LearningAPI_HostAddress}}/userrole/3
-
-###
-# ----------------------------     product    ------------------------------------------
-GET {{LearningAPI_HostAddress}}/product/product/13
-
-###
-
-# POST {{LearningAPI_HostAddress}}/product
-# Content-Type: application/json
-# Authorization: Bearer {{token}}
-
-# {
-#   "productName": "New Test Product",
-#   "description": "Test Description",
-#   "isArchived": false,
-#   "imageFiles": "shirt.png"
-# }
-
-###
-
-PUT {{LearningAPI_HostAddress}}/product/1
-Content-Type: application/json
-
-{
-  "productName": "Updated Test Product",
-  "description": "Updated Test Description",
-  "isArchived": false,
-  "imageFiles": "shirt.png"
-}
-
-###
-
-DELETE {{LearningAPI_HostAddress}}/product/1
-
-###
-
-
-POST {{LearningAPI_HostAddress}}/product
-Content-Type: application/json
-    "name": "lattt"
-
-    
-}
 
 ###
 
@@ -309,7 +267,7 @@ Content-Type: application/json
 
 {
   "role": "admin",
-  "description": "Admin role"
+  "description": "admin"
 }
 
 ###
@@ -348,53 +306,6 @@ Content-Type: application/json
 
 
 GET {{LearningAPI_HostAddress}}/user/confirm-email?token={{token}}
-
-{
-  "productName": "New Test Product",
-  "description": "Test Description",
-  "isArchived": false,
-  "imageFiles": "shirt.png"
-}
-
-###
-# ----------------------------     product    ------------------------------------------
-GET {{LearningAPI_HostAddress}}/product/product/13
-
-###
-
-# POST {{LearningAPI_HostAddress}}/product
-# Content-Type: application/json
-# Authorization: Bearer {{token}}
-
-# {
-#   "productName": "New Test Product",
-#   "description": "Test Description",
-#   "isArchived": false,
-#   "imageFiles": "shirt.png"
-# }
-
-###
-
-PUT {{LearningAPI_HostAddress}}/product/1
-Content-Type: application/json
-
-{
-  "productName": "Updated Test Product",
-  "description": "Updated Test Description",
-  "isArchived": false,
-  "imageFiles": "shirt.png"
-}
-
-###
-
-DELETE {{LearningAPI_HostAddress}}/product/1
-
-###
-
-
-POST {{LearningAPI_HostAddress}}/product
-Content-Type: application/json
-Authorization: Bearer {{token}}
 
 {
   "productName": "New Test Product",
@@ -500,5 +411,122 @@ Authorization: Bearer {{token}}
   "feedbackContent": "I LOVE THIS GUN"
   
 }
+
+###
+
+###
+# ----------------------------     product    ------------------------------------------
+# GET {{LearningAPI_HostAddress}}/product/product/13
+
+
+
+# POST {{LearningAPI_HostAddress}}/product
+# Content-Type: application/json
+# Authorization: Bearer {{token}}
+
+# {
+#   "productName": "New Test Product",
+#   "description": "Test Description",
+#   "isArchived": false,
+#   "imageFiles": "shirt.png"
+# }
+
+
+
+# PUT {{LearningAPI_HostAddress}}/product/1
+# Content-Type: application/json
+
+# {
+#   "productName": "Updated Test Product",
+#   "description": "Updated Test Description",
+#   "isArchived": false,
+#   "imageFiles": "shirt.png"
+# }
+
+
+
+# DELETE {{LearningAPI_HostAddress}}/product/1
+
+
+
+
+# POST {{LearningAPI_HostAddress}}/product
+# Content-Type: application/json
+# Authorization: Bearer {{token}}
+
+# {
+#   "productName": "New Test Product",
+#   "description": "Test Description",
+#   "isArchived": false,
+#   "imageFiles": "shirt.png"
+# }
+
+
+###
+
+POST {{LearningAPI_HostAddress}}/category
+Content-Type: application/json
+
+{
+  "name": "Bottoms",
+  "gender": "Women's"
+}
+
+###
+
+POST {{LearningAPI_HostAddress}}/product
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productName": "Men's Running T-Shirt",
+  "description": "High-performance breathable running t-shirt",
+  "imageFile": "tshirt.png",
+  "isArchived": false,
+  "categoryName": "Tops",
+  "categoryGender": "Men's",
+  "variants": [
+    {
+      "color": "Black",
+      "size": "M",
+      "price": 25.99,
+      "stock": 50
+    },
+    {
+      "color": "White",
+      "size": "L",
+      "price": 25.99,
+      "stock": 30
+    }
+  ]
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/product/product/1
+
+###
+
+PUT {{LearningAPI_HostAddress}}/feedback/2
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "rating": 5,
+  "feedbackContent": "I LOVE THIS APP"
+}
+###
+
+PUT {{LearningAPI_HostAddress}}/user/3
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userroleid": 3
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/product/product/0
 
 ###
