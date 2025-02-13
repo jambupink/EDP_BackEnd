@@ -31,6 +31,8 @@ namespace LearningAPI
 		public required DbSet<Product> Products { get; set; }
      public required DbSet<Feedback> Feedbacks { get; set; }
         public required DbSet<Variant> Variants { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+
 
     }
 

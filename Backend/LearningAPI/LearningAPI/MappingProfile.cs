@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LearningAPI.DTOs;
 using LearningAPI.Models;
 using LearningAPI.Models.Joseph;
 using LearningAPI.Models.Latiff;
@@ -10,9 +11,6 @@ namespace LearningAPI
         public MappingProfile()
         {
             CreateMap<Product, ProductDTO>().ReverseMap();
-            //.ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
-            //.ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
-            //.ForMember(dest => dest.Variants, opt => opt.MapFrom(src => src.Variants));
             
             CreateMap<User, UserDTO>();
             CreateMap<User, UserBasicDTO>();
@@ -21,6 +19,7 @@ namespace LearningAPI
             CreateMap<Feedback, FeedbackDTO>();
             
             CreateMap<Variant, VariantDTO>().ReverseMap();
+            CreateMap<Review, ReviewDTO>();
         }
 
     }

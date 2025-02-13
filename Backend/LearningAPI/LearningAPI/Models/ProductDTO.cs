@@ -1,4 +1,5 @@
-﻿using LearningAPI.Models.Latiff;
+﻿using LearningAPI.DTOs;
+using LearningAPI.Models.Latiff;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -26,5 +27,6 @@ namespace LearningAPI.Models
         public string CategoryName { get; set; } = string.Empty;
         public string CategoryGender { get; set; } = string.Empty;
         public List<VariantDTO>? Variants { get; set; }
+        public List<ReviewDTO>? Reviews { get; set; }
     }
 }

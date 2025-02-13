@@ -35,6 +35,7 @@ namespace LearningAPI.Models
         public string CategoryGender { get; set; } = string.Empty;
 
         // Foreign Keys
+        public List<Review>? Reviews { get; set; } // Allow multiple reviews
 
         public List<Variant>? Variants { get; set; } //allow multiple variants
     }
