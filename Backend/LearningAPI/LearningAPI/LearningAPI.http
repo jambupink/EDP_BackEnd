@@ -1,7 +1,7 @@
 
 
 @LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJsYXRAZ21haWwuY29tIiwicm9sZSI6IjEiLCJuYmYiOjE3Mzg3NjY3ODAsImV4cCI6MTc0MTM1ODc4MCwiaWF0IjoxNzM4NzY2NzgwfQ.-lYNa6eInx1S40Q7RzzPYJnJ2XL-DAluURX-cPyt3ds
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJicmFuZG9uZnJhbmNpc2NvNTEyQGdtYWlsLmNvbSIsInJvbGUiOiIxIiwibmJmIjoxNzM5NTU1NjMzLCJleHAiOjE3NDIxNDc2MzMsImlhdCI6MTczOTU1NTYzM30.mX30U23qTOtaBXjP-Z9Nzqka2-8TTXzJzGvqSljghqs
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -84,12 +84,13 @@ Authorization: Bearer {{token}}
 }
 
 ###
-
+@id=2
 PUT {{LearningAPI_HostAddress}}/user/{{id}}
-  "name": "latt",
-  "email": "lat@gmail.com",
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
 
-  "password": "test1234"
+  "password": "P@ssw0rd123!"
 }
 
 ###
@@ -530,3 +531,32 @@ Authorization: Bearer {{token}}
 GET {{LearningAPI_HostAddress}}/product/product/0
 
 ###
+
+
+PUT {{LearningAPI_HostAddress}}/user/password/2
+Content-Type: application/json
+Authorization: Bearer {{token}}
+{
+  "password": "test1234",
+  "newPassword": "P@ssw0rd123!"
+}
+
+###
+
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+  "email": "brandonfrancisco512@gmail.com",
+  "password": "test1234"
+}
+
+###
+
+POST {{LearningAPI_HostAddress}}/user/login
+Content-Type: application/json
+
+{
+  "email": "latiff0601@gmail.com",
+  "password": "test12345"
+}
