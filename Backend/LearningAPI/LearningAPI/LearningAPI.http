@@ -323,18 +323,9 @@ Content-Type: application/json
 
 [
   {
-    "productId": 24,
+    "productId": 1,
     "quantity": 2,
-    "price": 3,
-    "productname": "yeap",
-    "size": "S"
-  },
-  {
-    "productId": 25,
-    "quantity": 1,
-    "price": 5,
-    "productname": "nice",
-    "size": "M"
+    "variantId": 1
   }
 ]
 
