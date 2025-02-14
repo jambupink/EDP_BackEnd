@@ -42,9 +42,24 @@ namespace LearningAPI.Controllers
 				// Set the user ID to the current user's ID for each item
 				cart.UserId = userId;
 
+				var variant = await _context.Variants
+				   .Include(v => v.Product) // Ensure Product details are included
+				   .FirstOrDefaultAsync(v => v.VariantId == cart.VariantId);
+
+				if (variant == null)
+				{
+					return BadRequest($"Variant with ID {cart.VariantId} not found.");
+				}
+
+				if (cart.Quantity > variant.Stock)
+				{
+					return BadRequest($"Not enough stock for {variant.Product.ProductName} ({variant.Color}, {variant.Size}). Available: {variant.Stock}");
+				}
+
+
 				// Check if the item already exists in the user's cart
 				var existingCartItem = await _context.Carts
-					.FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == cart.ProductId && c.Size == cart.Size);
+					.FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == cart.ProductId && c.VariantId == cart.VariantId);
 
 				if (existingCartItem != null)
 				{
@@ -69,15 +84,31 @@ namespace LearningAPI.Controllers
 		[HttpGet("{userId}")]
 		public async Task<ActionResult<IEnumerable<Cart>>> GetCartByUserId(int userId)
 		{
-			var cart = await _context.Carts.Where(c => c.UserId == userId).ToListAsync();
+			var cart = await _context.Carts
+				.Where(c => c.UserId == userId)
+				.Include(c => c.Variant)
+				.ThenInclude(v => v.Product) // Include product details
+				.ToListAsync();
 
 			if (!cart.Any())
 			{
 				return NotFound("Cart is empty.");
 			}
 
-			return Ok(cart);
+			return Ok(cart.Select(c => new
+			{
+				c.CartId,
+				c.UserId,
+				ProductId = c.Variant.ProductId,
+				c.VariantId,
+				ProductName = c.Variant.Product.ProductName,
+				Color = c.Variant.Color,
+				Size = c.Variant.Size,
+				Price = c.Variant.Price,
+				c.Quantity
+			}));
 		}
+
 
 		// GET: View Cart by CartId
 		[HttpGet("cartitem/{cartId}")]

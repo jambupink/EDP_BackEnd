@@ -32,8 +32,10 @@ namespace LearningAPI.Controllers
 
 			// Fetch the user's cart items
 			var cartItems = await _context.Carts
-				.Where(c => c.UserId == userId)
-				.ToListAsync();
+			   .Where(c => c.UserId == userId)
+			   .Include(c => c.Product)  // Include related Product data
+			   .Include(c => c.Variant)  // Include related Variant data
+			   .ToListAsync();
 
 			if (!cartItems.Any())
 			{
@@ -50,10 +52,11 @@ namespace LearningAPI.Controllers
 				OrderItems = cartItems.Select(c => new OrderItem
 				{
 					ProductId = c.ProductId,
-					ProductName = c.ProductName,
-					Size = c.Size,
+					ProductName = c.Product.ProductName, // Get ProductName from Product
+					ImageFile = c.Product.ImageFile,
+					Size = c.Variant.Size, // Get Size from Variant
 					Quantity = c.Quantity,
-					Price = c.Price
+					Price = c.Variant.Price // Get Price from Variant
 				}).ToList()
 			};
 
