@@ -326,6 +326,11 @@ Content-Type: application/json
     "productId": 1,
     "quantity": 2,
     "variantId": 1
+  },
+  {
+    "productId": 1,
+    "quantity": 1,
+    "variantId": 1
   }
 ]
 

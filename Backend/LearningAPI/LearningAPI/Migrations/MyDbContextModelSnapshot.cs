@@ -45,7 +45,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Feedbacks");
+                    b.ToTable("Feedbacks", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Cart", b =>
@@ -74,7 +74,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("VariantId");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Donation", b =>
@@ -116,7 +116,7 @@ namespace LearningAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Donations");
+                    b.ToTable("Donations", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.DonationHistory", b =>
@@ -139,7 +139,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("DonationId");
 
-                    b.ToTable("DonationHistories");
+                    b.ToTable("DonationHistories", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.DonationStatus", b =>
@@ -162,7 +162,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("DonationId");
 
-                    b.ToTable("DonationStatuses");
+                    b.ToTable("DonationStatuses", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.User", b =>
@@ -227,7 +227,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("UserRoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Latiff.UserRole", b =>
@@ -254,7 +254,7 @@ namespace LearningAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Order", b =>
@@ -278,7 +278,7 @@ namespace LearningAPI.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.OrderItem", b =>
@@ -315,7 +315,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Payment", b =>
@@ -360,7 +360,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Product", b =>
@@ -409,7 +409,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Review", b =>
@@ -441,7 +441,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("LearningAPI.Models.Variant", b =>
@@ -473,7 +473,7 @@ namespace LearningAPI.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Variants");
+                    b.ToTable("Variants", (string)null);
                 });
 
             modelBuilder.Entity("Feedback", b =>

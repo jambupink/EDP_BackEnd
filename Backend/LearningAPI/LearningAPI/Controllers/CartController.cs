@@ -105,7 +105,9 @@ namespace LearningAPI.Controllers
 				Color = c.Variant.Color,
 				Size = c.Variant.Size,
 				Price = c.Variant.Price,
-				c.Quantity
+				c.Quantity,
+				c.Variant.Product.ImageFile,
+				c.Variant.Stock
 			}));
 		}
 
