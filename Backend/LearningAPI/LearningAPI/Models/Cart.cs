@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using LearningAPI.Models.Latiff;
 
 namespace LearningAPI.Models
@@ -15,8 +16,10 @@ namespace LearningAPI.Models
 
 		// Foreign key property
 		public int UserId { get; set; }
+		[JsonIgnore]
 		public User? User { get; set; }
 		public int VariantId { get; set; }
+		[JsonIgnore]
 		public Variant? Variant { get; set; }
 
 
