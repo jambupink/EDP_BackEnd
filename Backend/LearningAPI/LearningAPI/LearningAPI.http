@@ -1,7 +1,7 @@
 
 
 @LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJicmFuZG9uZnJhbmNpc2NvNTEyQGdtYWlsLmNvbSIsInJvbGUiOiIxIiwibmJmIjoxNzM5NTU1NjMzLCJleHAiOjE3NDIxNDc2MzMsImlhdCI6MTczOTU1NTYzM30.mX30U23qTOtaBXjP-Z9Nzqka2-8TTXzJzGvqSljghqs
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJicmFuZG9uZnJhbmNpc2NvNTEyQGdtYWlsLmNvbSIsInJvbGUiOiIxIiwibmJmIjoxNzM5Nzk4NDI1LCJleHAiOjE3NDIzOTA0MjUsImlhdCI6MTczOTc5ODQyNX0.79maoZPrFAYndcKuse5OkJoEpuIQPOTRpaZuPzHuatc
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -544,7 +544,7 @@ Content-Type: application/json
 
 {
   "email": "brandonfrancisco512@gmail.com",
-  "password": "test1234"
+  "password": "P@ssw0rd123!"
 }
 
 ###
@@ -572,5 +572,17 @@ Content-Type: application/json
 {
   //List
 }
+
+###
+
+
+@userId=3
+GET {{LearningAPI_HostAddress}}/orders/{{userId}}
+Authorization: Bearer {{token}}
+
+###
+
+GET {{LearningAPI_HostAddress}}/orders
+Authorization: Bearer {{token}}
 
 ###
