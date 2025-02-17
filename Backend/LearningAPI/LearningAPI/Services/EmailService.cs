@@ -33,6 +33,27 @@ namespace LearningAPI.Services
 
             smtpClient.Send(mailMessage);
         }
+        public void SendPasswordResetEmail(string email, string resetLink)
+        {
+            var smtpSettings = _configuration.GetSection("SmtpSettings").Get<SmtpSettings>();
+
+            using var smtpClient = new SmtpClient(smtpSettings.Host)
+            {
+                Port = smtpSettings.Port,
+                Credentials = new NetworkCredential(smtpSettings.Username, smtpSettings.Password),
+                EnableSsl = smtpSettings.EnableSsl
+            };
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(smtpSettings.FromEmail),
+                Subject = "Password Reset Request",
+                Body = $"Click this link to reset your password: {resetLink}",
+                IsBodyHtml = false
+            };
+            mailMessage.To.Add(email);
+
+            smtpClient.Send(mailMessage);
+        }
     }
     public class SmtpSettings
     {

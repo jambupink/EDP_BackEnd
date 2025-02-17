@@ -374,6 +374,45 @@ namespace LearningAPI.Controllers.Latiff
                 return StatusCode(500);
             }
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (user == null) return Ok(); // Don't reveal email doesn't exist
+
+            // Generate token (reuse email confirmation fields)
+            user.EmailConfirmationToken = Nanoid.Generate(size: 64);
+            user.EmailConfirmationTokenExpiry = DateTime.UtcNow.AddHours(1);
+            user.UpdatedAt = DateTime.Now;
+
+            await context.SaveChangesAsync();
+
+            // Send email
+            var clientBaseUrl = configuration.GetValue<string>("ClientBaseUrl");
+            var resetLink = $"{clientBaseUrl}/reset-password?token={user.EmailConfirmationToken}";
+            _emailService.SendPasswordResetEmail(user.Email, resetLink);
+
+            return Ok();
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u =>
+                u.EmailConfirmationToken == request.Token &&
+                u.EmailConfirmationTokenExpiry > DateTime.UtcNow);
+
+            if (user == null) return BadRequest("Invalid or expired token");
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            user.EmailConfirmationToken = String.Empty;
+            user.EmailConfirmationTokenExpiry = null;
+
+            await context.SaveChangesAsync();
+            return Ok(new { message =  "Password reset successfully" });
+        }
+
         private (int userId, int userRoleId) GetUserInfo()
         {
             int userId = Convert.ToInt32(User.Claims

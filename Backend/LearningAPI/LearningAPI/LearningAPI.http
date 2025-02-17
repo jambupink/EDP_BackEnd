@@ -641,3 +641,22 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{LearningAPI_HostAddress}}/user/forgot-password
+Content-Type: application/json
+
+{
+  "email": "latsleftnut@gmail.com"
+}
+
+###
+
+POST {{LearningAPI_HostAddress}}/user/reset-password
+Content-Type: application/json
+
+{
+  "token": "Efguo57JVYUQsQbAQF59PAHyuf0lb3FHcG4WdfGpKLkTGgSltHKOW0WMEL92wWid",
+  "newpassword": "Test123456789!"
+}
+
+###
