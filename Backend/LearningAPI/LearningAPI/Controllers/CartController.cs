@@ -30,7 +30,7 @@ namespace LearningAPI.Controllers
 				return BadRequest("Invalid cart details.");
 			}
 
-			// Get the current user's ID from the claims
+
 			int userId = GetUserId();
 			if (userId == 0)
 			{
@@ -39,11 +39,11 @@ namespace LearningAPI.Controllers
 
 			foreach (var cart in cartItems)
 			{
-				// Set the user ID to the current user's ID for each item
+
 				cart.UserId = userId;
 
 				var variant = await _context.Variants
-				   .Include(v => v.Product) // Ensure Product details are included
+				   .Include(v => v.Product) 
 				   .FirstOrDefaultAsync(v => v.VariantId == cart.VariantId);
 
 				if (variant == null)
@@ -57,18 +57,16 @@ namespace LearningAPI.Controllers
 				}
 
 
-				// Check if the item already exists in the user's cart
+
 				var existingCartItem = await _context.Carts
 					.FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == cart.ProductId && c.VariantId == cart.VariantId);
 
 				if (existingCartItem != null)
 				{
-					// If the item exists, update the quantity
 					existingCartItem.Quantity += cart.Quantity;
 				}
 				else
 				{
-					// If the item does not exist, add a new entry
 					_context.Carts.Add(cart);
 				}
 			}
@@ -87,7 +85,7 @@ namespace LearningAPI.Controllers
 			var cart = await _context.Carts
 				.Where(c => c.UserId == userId)
 				.Include(c => c.Variant)
-				.ThenInclude(v => v.Product) // Include product details
+				.ThenInclude(v => v.Product) 
 				.ToListAsync();
 
 			if (!cart.Any())
