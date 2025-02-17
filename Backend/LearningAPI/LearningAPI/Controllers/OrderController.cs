@@ -123,27 +123,6 @@ namespace LearningAPI.Controllers
             return Ok(orders);
         }
 
-		// GET: Get all orders (Admins Only)
-		[HttpGet("all"), Authorize]
-		public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders()
-		{
-			int userId = GetUserId(); // Get the logged-in user's ID
-			if (userId == 0)
-			{
-				return Unauthorized("User is not authenticated.");
-			}
-			// Fetch the user's role
-			var user = await _context.Users.FindAsync(userId);
-			if (user == null || user.UserRoleId != 2)
-			{
-				return Forbid("You do not have permission to view all orders.");
-			}
-			// Retrieve all orders with related order items
-			var orders = await _context.Orders
-				.Include(o => o.OrderItems)
-				.ToListAsync();
-			return Ok(orders);
-		}
 
 		// Verify if the user has purchased the product.
 		[HttpGet("check-purchase/{productId}"), Authorize]

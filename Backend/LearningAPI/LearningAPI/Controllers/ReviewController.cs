@@ -100,7 +100,7 @@ namespace LearningAPI.Controllers
             return Ok(review);
         }
 
-        // Update a Review (Only Owner Can Edit)
+        // Update a Review (Only Owner and Admin Can Edit)
         [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> UpdateReview(int id, [FromBody] UpdateReviewRequest request)
         {
@@ -111,13 +111,13 @@ namespace LearningAPI.Controllers
                 if (review == null)
                     return NotFound("Review not found.");
 
-                if (review.UserId != GetUserId()) // Ensure only the review owner can update
+                // Allow admins and review owners to update
+                if (review.UserId != GetUserId() && !User.IsInRole("Admin"))
                     return Forbid();
 
-                // Update only Comments and Rating
                 review.Comments = request.Comments.Trim();
-                review.Rating = Math.Round(request.Rating, 1); // Ensure 1 decimal place
-                review.ReviewDate = DateTime.UtcNow; // Set update timestamp
+                review.Rating = Math.Round(request.Rating, 1);
+                review.ReviewDate = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
                 return Ok(review);
@@ -129,7 +129,7 @@ namespace LearningAPI.Controllers
             }
         }
 
-        // Delete a Review (Only Owner Can Delete)
+        // Delete a Review (Only Owner and Admin Can Delete)
         [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteReview(int id)
         {
@@ -138,14 +138,16 @@ namespace LearningAPI.Controllers
             if (review == null)
                 return NotFound("Review not found.");
 
-            if (review.UserId != GetUserId())
-                return Forbid(); // Ensure the user can only delete their own reviews
+            // Allow admins and review owners to delete
+            if (review.UserId != GetUserId() && !User.IsInRole("Admin"))
+                return Forbid();
 
             _context.Reviews.Remove(review);
             await _context.SaveChangesAsync();
 
             return Ok("Review deleted successfully.");
         }
+
 
         private int GetUserId()
         {
