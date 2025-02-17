@@ -208,7 +208,8 @@ namespace LearningAPI.Controllers
             }
         }
 
-        [HttpGet("product/{id}"), Authorize]
+        [HttpGet("product/{id}")]
+        [AllowAnonymous] // ✅ Allow everyone to view product details
         [ProducesResponseType(typeof(ProductDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProductById(int id)
@@ -219,12 +220,16 @@ namespace LearningAPI.Controllers
                     .Include(p => p.Variants)
                     .Include(p => p.Reviews)
                     .ThenInclude(r => r.User)
-                    //.Where(p => p.UserId == GetUserId())
-                    .SingleOrDefaultAsync(p => p.Id == id && (User.IsInRole("Admin") || p.UserId == GetUserId()));
+                    .Include(p => p.User) // Ensure we fetch product owner details
+                    .ThenInclude(u => u.UserRole)
+                    .SingleOrDefaultAsync(p =>
+                        p.Id == id &&
+                        (!p.IsArchived.HasValue || p.IsArchived == false) && // Ensure product is not archived
+                        (User.IsInRole("Admin") || p.User.UserRole.Role == "Admin" || p.UserId == GetUserId()));
 
                 if (product == null)
                 {
-                    return NotFound("Product not found");
+                    return NotFound("Product not found.");
                 }
 
                 var productDTO = _mapper.Map<ProductDTO>(product);
@@ -378,61 +383,55 @@ namespace LearningAPI.Controllers
                 .Where(c => c.Type == ClaimTypes.NameIdentifier)
                 .Select(c => c.Value).SingleOrDefault());
         }
-		[HttpPut("update-stock/{productId}")]
-		[Authorize]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<IActionResult> UpdateStock(int productId, [FromBody] List<UpdateStockRequest> request)
-		{
-			try
-			{
-				// Get the logged-in user's ID
-				int userId = GetUserId();
+        [HttpPut("update-stock/{productId}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateStock(int productId, [FromBody] List<UpdateStockRequest> request)
+        {
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.Variants)
+                    .SingleOrDefaultAsync(p => p.Id == productId);
 
-				// Find the product and validate ownership
-				var product = await _context.Products
-					.Include(p => p.Variants)
-					.SingleOrDefaultAsync(p => p.Id == productId && p.UserId == userId);
+                if (product == null)
+                {
+                    return NotFound("Product not found.");
+                }
 
-				if (product == null)
-				{
-					return NotFound("Product not found or does not belong to the user.");
-				}
 
-				// Ensure product.Variants is initialized
-				if (product.Variants == null)
-				{
-					product.Variants = new List<Variant>();
-				}
+                if (product.Variants == null)
+                {
+                    product.Variants = new List<Variant>();
+                }
 
-				// Handle stock update for variants
-				foreach (var stockUpdate in request)
-				{
-					var variant = product.Variants.FirstOrDefault(v => v.VariantId == stockUpdate.VariantId);
-					if (variant != null)
-					{
-						variant.Stock = stockUpdate.Stock;
-					}
-					else
-					{
-						return BadRequest($"Variant with ID {stockUpdate.VariantId} not found.");
-					}
-				}
 
-				// Update last modified timestamp
-				product.UpdatedAt = DateTime.UtcNow;
+                foreach (var stockUpdate in request)
+                {
+                    var variant = product.Variants.FirstOrDefault(v => v.VariantId == stockUpdate.VariantId);
+                    if (variant != null)
+                    {
+                        variant.Stock = stockUpdate.Stock;
+                    }
+                    else
+                    {
+                        return BadRequest($"Variant with ID {stockUpdate.VariantId} not found.");
+                    }
+                }
+                product.UpdatedAt = DateTime.UtcNow;
 
-				// Save changes
-				await _context.SaveChangesAsync();
 
-				return Ok("Stock updated successfully.");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error while updating stock");
-				return StatusCode(500, "An error occurred while updating stock.");
-			}
-		}
-	}
+                await _context.SaveChangesAsync();
+
+                return Ok("Stock updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating stock");
+                return StatusCode(500, "An error occurred while updating stock.");
+            }
+        }
+    }
 }

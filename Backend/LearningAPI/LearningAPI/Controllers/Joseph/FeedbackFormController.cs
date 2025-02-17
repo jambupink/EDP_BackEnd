@@ -82,7 +82,7 @@ namespace LearningAPI.Controllers.Joseph
             }
         }
 
-        [HttpDelete("feedback/{id}"), Authorize]
+        [HttpDelete("admin/{id}"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteFeedbackByAdmin(int id)

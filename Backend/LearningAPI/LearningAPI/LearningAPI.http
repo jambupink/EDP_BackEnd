@@ -632,3 +632,12 @@ GET {{LearningAPI_HostAddress}}/orders/check-purchase/2
 Authorization: Bearer {{token}}
 
 ###
+
+PUT {{LearningAPI_HostAddress}}/product/update-stock/{{productId}}
+Content-Type: application/json
+
+{
+  //List
+}
+
+###
