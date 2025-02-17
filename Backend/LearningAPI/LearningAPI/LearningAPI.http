@@ -1,7 +1,7 @@
 
 
 @LearningAPI_HostAddress = https://localhost:7004
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJsYXR0IiwiZW1haWwiOiJicmFuZG9uZnJhbmNpc2NvNTEyQGdtYWlsLmNvbSIsInJvbGUiOiIxIiwibmJmIjoxNzM5NTU1NjMzLCJleHAiOjE3NDIxNDc2MzMsImlhdCI6MTczOTU1NTYzM30.mX30U23qTOtaBXjP-Z9Nzqka2-8TTXzJzGvqSljghqs
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwidW5pcXVlX25hbWUiOiJsYXRpZmYgbnVtb3JvIGR1byIsImVtYWlsIjoibGF0c2xlZnRudXRAZ21haWwuY29tIiwicm9sZSI6IjIiLCJuYmYiOjE3Mzk3OTY4MDcsImV4cCI6MTc0MjM4ODgwNywiaWF0IjoxNzM5Nzk2ODA3fQ.mF1e4__M0NbfwA8HKP3JxkJOxul5p74ha3v0oCo7HYw
 
 GET {{LearningAPI_HostAddress}}/weatherforecast/
 Accept: application/json
@@ -140,8 +140,8 @@ POST {{LearningAPI_HostAddress}}/user/login
 Content-Type: application/json
 
 {
-  "email": "lat@gmail.com",
-  "password": "test1234"
+  "email": "latsleftnut@gmail.com",
+  "password": "Test123456789!"
 }
 
 ###
@@ -175,6 +175,15 @@ Authorization: Bearer {{token}}
 ###
 
 # ----------------------------     user role    ------------------------------------------
+POST {{LearningAPI_HostAddress}}/userrole
+Content-Type: application/json
+
+{
+  "role": "customer",
+  "description": "customer"
+}
+
+###
 POST {{LearningAPI_HostAddress}}/userrole
 Content-Type: application/json
 
@@ -572,5 +581,23 @@ Content-Type: application/json
 {
   //List
 }
+
+###
+
+POST {{LearningAPI_HostAddress}}/userrole
+Content-Type: application/json
+
+{
+  //UserRole
+}
+
+###
+
+GET {{LearningAPI_HostAddress}}/user/confirm-email?token=yssBUTxFpkNdRB-YOUG3gTH2XyMBfaFVfDjyX7FDN2TIJniN2LrVr1lcQ-C08Se0
+
+###
+
+GET {{LearningAPI_HostAddress}}/feedback/all-feedbacks
+Authorization: Bearer {{token}}
 
 ###

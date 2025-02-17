@@ -118,7 +118,7 @@ namespace LearningAPI.Controllers.Joseph
             }
         }
 
-        [HttpGet("all-feedbacks"), Authorize(Roles = "Admin")]
+        [HttpGet("all-feedbacks"), Authorize]
         public async Task<IActionResult> GetAllFeedbacks()
         {
             try
