@@ -13,5 +13,8 @@ namespace LearningAPI.Models
 
         [Required]
         public int ProductId { get; set; } // FK for product
+
+        [Required]
+        public int OrderId { get; set; } // FK for order 
     }
 }

@@ -28,29 +28,20 @@ namespace LearningAPI.Controllers
             {
                 int userId = GetUserId(); // Get authenticated user ID
 
-                // Check if the user has purchased this product before reviewing
-                bool hasPurchased = await _context.Orders
-                    .Include(o => o.OrderItems)
-                    .AnyAsync(o => o.UserId == userId && o.OrderItems.Any(oi => oi.ProductId == request.ProductId));
+                // 🔹 Ensure the order exists and belongs to the user before allowing the review
+                bool validOrder = await _context.Orders
+                    .AnyAsync(o => o.OrderId == request.OrderId && o.UserId == userId);
 
-                if (!hasPurchased)
+                if (!validOrder)
                 {
-                    return Forbid("You can only review products that you have purchased.");
-                }
-
-                // Ensure the user has not already reviewed this product
-                bool alreadyReviewed = await _context.Reviews
-                    .AnyAsync(r => r.UserId == userId && r.ProductId == request.ProductId);
-
-                if (alreadyReviewed)
-                {
-                    return BadRequest("You have already reviewed this product.");
+                    return BadRequest("You can only review products that you have purchased.");
                 }
 
                 var review = new Review
                 {
                     UserId = userId,
                     ProductId = request.ProductId,
+                    OrderId = request.OrderId, // 🔹 Link review to order
                     Comments = request.Comments.Trim(),
                     Rating = Math.Round(request.Rating, 1), // Ensure 1 decimal place
                     ReviewDate = DateTime.UtcNow

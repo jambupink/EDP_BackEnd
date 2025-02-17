@@ -131,23 +131,21 @@ namespace LearningAPI.Controllers
             {
                 int userId = GetUserId(); // Get the logged-in user's ID
 
-			if (userId == 0)
-			{
-				return Unauthorized("User is not authenticated.");
-			}
+                var order = await _context.Orders
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefaultAsync(o => o.UserId == userId && o.OrderItems.Any(oi => oi.ProductId == productId));
 
-			var user = await _context.Users.FindAsync(userId);
-			if (user == null || user.UserRoleId != 2)
-			{
-				return Forbid("You do not have permission to view all orders.");
-			}
+                if (order == null)
+                    return Ok(new { hasPurchased = false });
 
-			var orders = await _context.Orders
-				.Include(o => o.OrderItems)
-				.ToListAsync();
-
-			return Ok(orders);
-		}
+                return Ok(new { hasPurchased = true, orderId = order.OrderId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking purchase status");
+                return StatusCode(500, "An error occurred while checking purchase status.");
+            }
+        }
 
 
 

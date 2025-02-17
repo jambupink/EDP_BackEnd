@@ -626,3 +626,9 @@ DELETE {{LearningAPI_HostAddress}}/feedback/feedback/1
 Authorization: Bearer {{token}}
 
 ###
+
+
+GET {{LearningAPI_HostAddress}}/orders/check-purchase/2
+Authorization: Bearer {{token}}
+
+###
