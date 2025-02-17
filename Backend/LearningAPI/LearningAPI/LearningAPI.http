@@ -616,3 +616,13 @@ Authorization: Bearer {{token}}
 GET {{LearningAPI_HostAddress}}/product/my-products
 
 ###
+
+GET {{LearningAPI_HostAddress}}/feedback/all-feedbacks
+Authorization: Bearer {{token}}
+
+###
+
+DELETE {{LearningAPI_HostAddress}}/feedback/feedback/1
+Authorization: Bearer {{token}}
+
+###
