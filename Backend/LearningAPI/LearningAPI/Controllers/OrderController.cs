@@ -23,18 +23,18 @@ namespace LearningAPI.Controllers
 		[HttpPost, Authorize]
 		public async Task<ActionResult<Order>> CreateOrder([FromBody] CreateOrderRequest createOrderRequest)
 		{
-			// Get the current user ID
+
 			int userId = GetUserId();
 			if (userId == 0)
 			{
 				return Unauthorized("User is not authenticated.");
 			}
 
-			// Fetch the user's cart items
+
 			var cartItems = await _context.Carts
 			   .Where(c => c.UserId == userId)
-			   .Include(c => c.Product)  // Include related Product data
-			   .Include(c => c.Variant)  // Include related Variant data
+			   .Include(c => c.Product)  
+			   .Include(c => c.Variant)  
 			   .ToListAsync();
 
 			if (!cartItems.Any())
@@ -52,18 +52,16 @@ namespace LearningAPI.Controllers
 				OrderItems = cartItems.Select(c => new OrderItem
 				{
 					ProductId = c.ProductId,
-					ProductName = c.Product.ProductName, // Get ProductName from Product
+					ProductName = c.Product.ProductName, 
 					ImageFile = c.Product.ImageFile,
-					Size = c.Variant.Size, // Get Size from Variant
+					Size = c.Variant.Size, 
 					Quantity = c.Quantity,
-					Price = c.Variant.Price // Get Price from Variant
+					Price = c.Variant.Price 
 				}).ToList()
 			};
 
-			// Save the order to the database
 			_context.Orders.Add(order);
 
-			// Clear the user's cart
 			_context.Carts.RemoveRange(cartItems);
 
 			await _context.SaveChangesAsync();
@@ -77,7 +75,7 @@ namespace LearningAPI.Controllers
 		[HttpGet("detail/{orderId}")]
 		public async Task<ActionResult<Order>> GetOrderByOrderId(int orderId)
 		{
-			int userId = GetUserId(); // Assuming this gets the authenticated user's ID
+			int userId = GetUserId(); 
 
 			if (userId == 0)
 			{
@@ -85,9 +83,9 @@ namespace LearningAPI.Controllers
 			}
 
 			var order = await _context.Orders
-				.Where(o => o.OrderId == orderId && o.UserId == userId)  // Fetch only orders for the authenticated user
-				.Include(o => o.OrderItems)  // Including related OrderItems
-				.FirstOrDefaultAsync();  // Get the first matching order (should be one or none)
+				.Where(o => o.OrderId == orderId && o.UserId == userId)  
+				.Include(o => o.OrderItems)  
+				.FirstOrDefaultAsync();  
 
 			if (order == null)
 			{
@@ -102,8 +100,8 @@ namespace LearningAPI.Controllers
 		[HttpGet("{userId}")]
 		public async Task<ActionResult<IEnumerable<Order>>> GetOrderById(int userId)
 		{
-			// You can also add a check to ensure that the authenticated user matches the userId provided in the request
-			int authenticatedUserId = GetUserId(); // Assuming this gets the authenticated user's ID
+		
+			int authenticatedUserId = GetUserId(); 
 
 			if (authenticatedUserId == 0 || authenticatedUserId != userId)
 			{
@@ -112,7 +110,7 @@ namespace LearningAPI.Controllers
 
 			var orders = await _context.Orders
 				.Where(o => o.UserId == userId)
-				.Include(o => o.OrderItems)  // This ensures you load the associated OrderItems
+				.Include(o => o.OrderItems)  
 				.ToListAsync();
 
 			if (orders == null || orders.Count == 0)
@@ -134,14 +132,12 @@ namespace LearningAPI.Controllers
 				return Unauthorized("User is not authenticated.");
 			}
 
-			// Fetch the user's role
 			var user = await _context.Users.FindAsync(userId);
 			if (user == null || user.UserRoleId != 2)
 			{
 				return Forbid("You do not have permission to view all orders.");
 			}
 
-			// Retrieve all orders with related order items
 			var orders = await _context.Orders
 				.Include(o => o.OrderItems)
 				.ToListAsync();

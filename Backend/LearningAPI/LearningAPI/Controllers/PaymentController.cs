@@ -33,14 +33,14 @@ namespace LearningAPI.Controllers
 				return BadRequest("Invalid payment details.");
 			}
 
-			// Get the current user's ID from the claims
+	
 			int userId = GetUserId();
 			if (userId == 0)
 			{
 				return Unauthorized("User is not authenticated.");
 			}
 
-			// Validate the OrderId passed in the payment request
+
 			var order = await _context.Orders
 				.Where(o => o.UserId == userId && o.OrderStatus == "Pending").FirstOrDefaultAsync();
 
@@ -49,14 +49,12 @@ namespace LearningAPI.Controllers
 				return NotFound("Order not found or is already processed.");
 			}
 
-			// Generate a salt for hashing
+
 			string salt = HashHelper.GenerateSalt();
 
-			// Hash card number and CVC
 			string hashedCardNo = HashHelper.ComputeHash(paymentRequest.CardNo, salt);
 			string hashedCvc = HashHelper.ComputeHash(paymentRequest.Cvc, salt);
 
-			// Create the payment record
 			var payment = new Payment
 			{
 				OrderId = order.OrderId,
@@ -67,12 +65,11 @@ namespace LearningAPI.Controllers
 				CardNo = hashedCardNo,
 				Amount = paymentRequest.Amount,
 				PaymentDate = DateTime.UtcNow,
-				Status = "Completed" // Assuming the payment is successful
+				Status = "Completed" 
 			};
 
 			_context.Payments.Add(payment);
 
-			// Update the order status to "Paid"
 			order.OrderStatus = "Paid";
 
 			await _context.SaveChangesAsync();
@@ -105,7 +102,7 @@ namespace LearningAPI.Controllers
 		}
 
 
-		// Helper method to get the userId from claims
+
 		private int GetUserId()
 		{
 			return Convert.ToInt32(User.Claims
