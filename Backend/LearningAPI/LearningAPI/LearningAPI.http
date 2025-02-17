@@ -556,3 +556,21 @@ Content-Type: application/json
   "email": "latiff0601@gmail.com",
   "password": "test12345"
 }
+PUT {{LearningAPI_HostAddress}}/product/{{id}}
+Content-Type: application/json
+
+{
+  //UpdateProductRequest
+}
+
+###
+
+@productId=0
+PUT {{LearningAPI_HostAddress}}/product/update-stock/{{productId}}
+Content-Type: application/json
+
+{
+  //List
+}
+
+###
