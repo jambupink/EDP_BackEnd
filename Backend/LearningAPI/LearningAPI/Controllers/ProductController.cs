@@ -224,26 +224,29 @@ namespace LearningAPI.Controllers
                     .ThenInclude(u => u.UserRole)
                     .SingleOrDefaultAsync(p =>
                         p.Id == id &&
-                        (!p.IsArchived.HasValue || p.IsArchived == false) && // Ensure product is not archived
-                        (User.IsInRole("Admin") || p.User.UserRole.Role == "Admin" || p.UserId == GetUserId()));
+                        ( // ✅ Allow admins and product owners to fetch archived products
+                            !p.IsArchived.HasValue || p.IsArchived == false ||
+                            User.IsInRole("Admin") || p.UserId == GetUserId()
+                        )
+                    );
 
                 if (product == null)
                 {
                     return NotFound("Product not found.");
                 }
 
-				var productDTO = _mapper.Map<ProductDTO>(product);
-				return Ok(productDTO);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error while retrieving product with ID {Id}", id);
-				return StatusCode(500, "An error occurred while retrieving the product.");
-			}
-		}
+                var productDTO = _mapper.Map<ProductDTO>(product);
+                return Ok(productDTO);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving product with ID {Id}", id);
+                return StatusCode(500, "An error occurred while retrieving the product.");
+            }
+        }
 
-		//[HttpGet("admin"), Authorize(Roles = "Admin")]
-		[HttpGet("admin"), Authorize]
+        //[HttpGet("admin"), Authorize(Roles = "Admin")]
+        [HttpGet("admin"), Authorize]
 		[ProducesResponseType(typeof(IEnumerable<ProductDTO>), StatusCodes.Status200OK)]
 		public async Task<IActionResult> GetAllProductsForAdmin()
 		{
@@ -305,34 +308,32 @@ namespace LearningAPI.Controllers
 				return StatusCode(500, "An error occurred while retrieving products.");
 			}
 		}
+        [HttpGet("public-products")]
+        [AllowAnonymous] // Allows customers and guests to see products
+        [ProducesResponseType(typeof(IEnumerable<ProductDTO>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPublicProducts()
+        {
+            try
+            {
+                var publicProducts = await _context.Products
+                    .Include(p => p.Variants)
+                    .Include(p => p.Reviews)
+                    .Include(p => p.User)
+                    .Where(p => p.IsArchived == false) // Only show products that are not archived
+                    .OrderByDescending(p => p.UpdatedAt)
+                    .ToListAsync();
 
-		[HttpGet("public-products")]
-		[AllowAnonymous] // Allows customers and guests to see products
-		[ProducesResponseType(typeof(IEnumerable<ProductDTO>), StatusCodes.Status200OK)]
-		public async Task<IActionResult> GetProductsPostedByAdmins()
-		{
-			try
-			{
-				var adminProducts = await _context.Products
-					.Include(p => p.Variants)
-					.Include(p => p.Reviews)
-					.Include(p => p.User)
-					.ThenInclude(u => u.UserRole) // Ensure UserRole is loaded
-					.Where(p => p.IsArchived == false && p.User.UserRole != null && p.User.UserRole.Role == "Admin")
-					.OrderByDescending(p => p.UpdatedAt)
-					.ToListAsync();
+                var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(publicProducts);
+                return Ok(productDTOs);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving public products");
+                return StatusCode(500, "An error occurred while retrieving products.");
+            }
+        }
 
-				var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(adminProducts);
-				return Ok(productDTOs);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error while retrieving admin products");
-				return StatusCode(500, "An error occurred while retrieving products.");
-			}
-		}
-
-		[HttpDelete("{id}"), Authorize]
+        [HttpDelete("{id}"), Authorize]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<IActionResult> DeleteProduct(int id)
